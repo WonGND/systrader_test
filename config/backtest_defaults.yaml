@@ -1,0 +1,50 @@
+# 백테스트 기본 규약 v1.0
+# 출처: CLAUDE.md §5 (백테스트 규약). 여기 없는 값을 코드에 하드코딩하지 않는다.
+# 모든 값은 "가정값(assumed)"이며 결과 리포트에 그대로 표기해야 한다.
+# 원문(포스트)이 다른 규약을 명시하면 스펙의 evidence로 기록하고 그것을 따른다.
+
+version: "1.0"
+source: "CLAUDE.md §5"
+
+execution:
+  # 룩어헤드 금지: 시그널 생성 시점과 체결 시점을 분리한다.
+  signal_to_execution: next_open        # 기본 체결 규약: 익일 시가 (보수적)
+  note: "원문에 체결 규약 명시가 있으면 그것을 따르고 출처를 기록한다"
+
+costs:
+  # 미국 시장 기본값. 전부 가정값 — 리포트에 "가정값"으로 표기.
+  commission_pct: 0.0                   # 수수료 0%
+  slippage_oneway_pct: 0.0005           # 편도 슬리피지 0.05%
+  tax_pct: 0.0                          # 거래세 없음
+  label_in_reports: assumed
+
+periods:
+  # 전략별 임의 조정 금지 (CLAUDE.md §5)
+  in_sample_end: "2018-12-31"
+  oos_start: "2019-01-01"
+
+benchmark:
+  ticker: SPY
+  mode: buy_and_hold
+  note: "동일 기간·동일 비용 가정·배당 재투자 기준"
+
+data:
+  source: yfinance
+  base_currency: USD
+  total_return: true                    # 배당 포함 총수익 기준
+  # auto_adjust 값은 M3 엔진 구현 시 확정하고 docs/data_limitations.md L-05에 기록
+  auto_adjust: null
+  interpolate_missing: false            # 결측 보간 금지 — 기록만 한다
+  cache_dir: "cache/yfinance"           # gitignore 대상
+  allow_index_proxy_before_inception: false
+
+metrics:
+  # 필수 지표 (CLAUDE.md §5)
+  required: [cagr, mdd, sharpe, win_rate, yearly_returns, trade_count, turnover]
+
+judgment:
+  criteria_version: "1.0"               # CLAUDE.md §7. 변경 시 버전업 + DECISIONS.md
+  oos_sharpe_min: 0.5
+  oos_mdd_max_vs_insample: 1.5
+  oos_cagr_vs_benchmark: gte
+  min_oos_rebalances: 12

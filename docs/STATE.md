@@ -12,7 +12,10 @@
 - [x] schemas/strategy_spec.schema.json 생성
 - [x] docs 뼈대 문서 생성 (DECISIONS / OPEN_QUESTIONS / data_limitations /
       needs_image_review / excluded_domestic / README)
-- [ ] 블로그 구조 조사 완료 (robots.txt 확인 포함) — **차단됨 (B-01 참조)**
+- [ ] 블로그 구조 조사 완료 (robots.txt 확인 포함) — **차단됨 (B-01 참조, 2026-08-07 재시도에서도 동일 403 확인)**
+- [x] config/backtest_defaults.yaml 생성 (CLAUDE.md §5 값 그대로, DECISIONS.md 기록)
+- [x] requirements.txt 생성
+- [x] 원문 파일 3종 정밀 재검증 — 스키마·화이트리스트·CLAUDE.md 핵심 값 31/31 지시서 일치
 - [x] M1 실행 계획 제출 → `reports/M0_survey_and_M1_plan.md`
 - [ ] **사용자 승인 대기 중**
 
