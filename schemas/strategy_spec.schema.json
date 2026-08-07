@@ -1,0 +1,361 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "strategy_spec.schema.json",
+  "title": "systrader79 Strategy Spec",
+  "version": "1.1",
+  "type": "object",
+  "required": ["spec_id", "schema_version", "source", "scope", "review_status", "strategy"],
+  "additionalProperties": false,
+
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["value", "source_quote", "confidence", "assumption_needed"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "description": "원문에서 확인된 값. 확인 불가 시 반드시 null.",
+          "type": ["string", "number", "boolean", "array", "object", "null"]
+        },
+        "source_quote": {
+          "description": "근거 원문 인용(최대 300자). 요약·의역 금지, 원문 그대로.",
+          "type": ["string", "null"],
+          "maxLength": 300
+        },
+        "source_locator": {
+          "description": "인용 위치 식별자. 예: 'para#12', 'H2:진입 조건'",
+          "type": ["string", "null"]
+        },
+        "confidence": {
+          "description": "high=원문 명시, medium=문맥상 일의적, low=모호, none=근거 없음",
+          "enum": ["high", "medium", "low", "none"]
+        },
+        "assumption_needed": {
+          "description": "true면 사용자 확인 없이 백테스트에 사용 금지",
+          "type": "boolean"
+        },
+        "question_for_user": {
+          "type": ["string", "null"],
+          "description": "assumption_needed가 true일 때 사용자에게 물을 질문(한국어)"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "value": { "const": null } } },
+          "then": {
+            "properties": {
+              "assumption_needed": { "const": true },
+              "confidence": { "const": "none" }
+            },
+            "required": ["question_for_user"]
+          }
+        },
+        {
+          "if": { "properties": { "assumption_needed": { "const": false } } },
+          "then": {
+            "properties": { "source_quote": { "type": "string", "minLength": 1 } }
+          }
+        }
+      ]
+    },
+
+    "ticker_mapping_entry": {
+      "type": "object",
+      "required": ["original_asset", "mapped_ticker", "mapping_source", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "original_asset": {
+          "type": "string",
+          "description": "원문이 지칭한 자산 서술 그대로. 예: '코스피200 지수'"
+        },
+        "asset_class_key": {
+          "type": ["string", "null"],
+          "description": "config/ticker_whitelist.yaml의 allowed 키. whitelist 출처일 때 필수."
+        },
+        "mapped_ticker": { "type": "string" },
+        "mapping_source": {
+          "enum": ["whitelist", "user_approved"],
+          "description": "이 두 값 외에는 허용하지 않는다. 자동 추론 매핑은 스키마 위반."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "description": "왜 이 치환이 타당한지. 빈 문자열 불가."
+        },
+        "approved_at": { "type": ["string", "null"], "format": "date" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mapping_source": { "const": "whitelist" } } },
+          "then": { "required": ["asset_class_key"] }
+        },
+        {
+          "if": { "properties": { "mapping_source": { "const": "user_approved" } } },
+          "then": { "required": ["approved_at"] }
+        }
+      ]
+    }
+  },
+
+  "properties": {
+    "spec_id": { "type": "string", "description": "post slug 기반 고유 ID" },
+    "schema_version": { "const": "1.1" },
+
+    "source": {
+      "type": "object",
+      "required": ["post_url", "post_title", "category", "archived_path", "content_hash"],
+      "properties": {
+        "post_url": { "type": "string" },
+        "post_title": { "type": "string" },
+        "category": { "enum": ["column_strategy", "investing_basics", "other"] },
+        "published_at": { "type": ["string", "null"], "format": "date" },
+        "archived_path": { "type": "string", "description": "로컬 아카이브 경로(비공개)" },
+        "content_hash": { "type": "string" },
+        "image_count": { "type": "integer", "minimum": 0 },
+        "text_only_reproducible": {
+          "type": "boolean",
+          "description": "false면 review_status.status는 needs_image_review여야 한다"
+        },
+        "related_posts": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "scope": {
+      "type": "object",
+      "required": ["track"],
+      "properties": {
+        "track": {
+          "enum": ["native_overseas", "ported", "excluded_domestic_only", "undecided"]
+        },
+        "track_reason": { "type": "string" },
+        "port_note": {
+          "type": ["string", "null"],
+          "description": "track=ported일 때 필수. 이식 판단 근거와 로직 보존 여부 서술."
+        },
+        "survivorship_risk": {
+          "enum": ["low", "medium", "high"],
+          "description": "개별 종목 스크리닝 = high, ETF/지수 기반 = low"
+        },
+        "m4_reproduction_eligible": {
+          "type": "boolean",
+          "description": "track=native_overseas일 때만 true 가능"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "track": { "const": "ported" } } },
+          "then": {
+            "required": ["port_note"],
+            "properties": { "m4_reproduction_eligible": { "const": false } }
+          }
+        },
+        {
+          "if": { "properties": { "track": { "const": "excluded_domestic_only" } } },
+          "then": { "properties": { "m4_reproduction_eligible": { "const": false } } }
+        }
+      ]
+    },
+
+    "review_status": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": [
+            "ready_for_backtest",
+            "needs_user_confirm",
+            "needs_image_review",
+            "not_a_strategy",
+            "duplicate_or_continuation",
+            "excluded_domestic_only"
+          ]
+        },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "blocking_questions": { "type": "array", "items": { "type": "string" } },
+        "reviewed_by_human": { "type": "boolean", "default": false }
+      }
+    },
+
+    "strategy": {
+      "type": "object",
+      "required": ["name", "core_idea", "asset_class", "universe", "signals", "sizing", "rebalance"],
+      "properties": {
+        "name": { "$ref": "#/$defs/evidence" },
+        "core_idea": { "$ref": "#/$defs/evidence" },
+        "strategy_type": {
+          "$ref": "#/$defs/evidence",
+          "description": "value 예: momentum | mean_reversion | asset_allocation | value | trend_following | hybrid"
+        },
+        "asset_class": { "$ref": "#/$defs/evidence" },
+        "market_in_post": {
+          "$ref": "#/$defs/evidence",
+          "description": "원문이 상정한 시장. value 예: KRX | US | GLOBAL"
+        },
+
+        "universe": {
+          "type": "object",
+          "properties": {
+            "selection_rule": { "$ref": "#/$defs/evidence" },
+            "filters": { "$ref": "#/$defs/evidence" },
+            "position_count": { "$ref": "#/$defs/evidence" },
+            "includes_etf": { "$ref": "#/$defs/evidence" },
+            "delisting_handling": {
+              "$ref": "#/$defs/evidence",
+              "description": "원문 언급 없으면 null. 엔진 기본 동작은 config에서 관리."
+            },
+            "ticker_mapping": {
+              "type": "array",
+              "description": "Track B 이식 시 치환 내역. whitelist 또는 user_approved 출처만 허용.",
+              "items": { "$ref": "#/$defs/ticker_mapping_entry" }
+            },
+            "unmapped_assets": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "화이트리스트에 없어 치환하지 못한 자산 목록. 비어있지 않으면 review_status는 needs_user_confirm이어야 한다."
+            },
+            "resolved_tickers": {
+              "type": ["array", "null"],
+              "items": { "type": "string" },
+              "description": "실제 백테스트에 투입된 최종 티커 목록. ticker_mapping과 일관되어야 한다."
+            }
+          }
+        },
+
+        "signals": {
+          "type": "object",
+          "required": ["entry", "exit"],
+          "properties": {
+            "entry": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_text": { "$ref": "#/$defs/evidence" },
+                  "indicator": { "$ref": "#/$defs/evidence" },
+                  "lookback_period": { "$ref": "#/$defs/evidence" },
+                  "threshold": { "$ref": "#/$defs/evidence" },
+                  "operator": { "$ref": "#/$defs/evidence" }
+                }
+              }
+            },
+            "exit": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule_text": { "$ref": "#/$defs/evidence" },
+                  "indicator": { "$ref": "#/$defs/evidence" },
+                  "lookback_period": { "$ref": "#/$defs/evidence" },
+                  "threshold": { "$ref": "#/$defs/evidence" }
+                }
+              }
+            },
+            "signal_to_execution_lag": {
+              "$ref": "#/$defs/evidence",
+              "description": "예: 당일 종가 체결 / 익일 시가 체결. 원문에 없으면 null (엔진 기본값=익일 시가, 리포트에 가정값 표기)."
+            }
+          }
+        },
+
+        "sizing": {
+          "type": "object",
+          "properties": {
+            "method": { "$ref": "#/$defs/evidence", "description": "equal_weight | vol_target | fixed_fraction 등" },
+            "leverage": { "$ref": "#/$defs/evidence" },
+            "cash_handling": { "$ref": "#/$defs/evidence" }
+          }
+        },
+
+        "rebalance": {
+          "type": "object",
+          "properties": {
+            "frequency": { "$ref": "#/$defs/evidence" },
+            "timing": { "$ref": "#/$defs/evidence" }
+          }
+        },
+
+        "risk_controls": {
+          "type": "object",
+          "properties": {
+            "stop_loss": { "$ref": "#/$defs/evidence" },
+            "take_profit": { "$ref": "#/$defs/evidence" },
+            "max_drawdown_rule": { "$ref": "#/$defs/evidence" },
+            "market_filter": { "$ref": "#/$defs/evidence" }
+          }
+        },
+
+        "costs_assumed_in_post": {
+          "type": "object",
+          "description": "원문이 명시한 비용 가정. 없으면 전부 null(엔진 기본값과 반드시 구분).",
+          "properties": {
+            "commission": { "$ref": "#/$defs/evidence" },
+            "tax": { "$ref": "#/$defs/evidence" },
+            "slippage": { "$ref": "#/$defs/evidence" }
+          }
+        }
+      }
+    },
+
+    "reported_performance": {
+      "type": "object",
+      "description": "원문이 주장하는 성과. 검증 대상이지 신뢰 대상이 아니다.",
+      "properties": {
+        "evidence_type": { "enum": ["text", "image_only", "none"] },
+        "period_start": { "$ref": "#/$defs/evidence" },
+        "period_end": { "$ref": "#/$defs/evidence" },
+        "cagr": { "$ref": "#/$defs/evidence" },
+        "mdd": { "$ref": "#/$defs/evidence" },
+        "win_rate": { "$ref": "#/$defs/evidence" },
+        "other_metrics": { "$ref": "#/$defs/evidence" }
+      }
+    },
+
+    "validation_plan": {
+      "type": "object",
+      "properties": {
+        "in_sample_end": { "type": "string", "format": "date", "default": "2018-12-31" },
+        "oos_start": { "type": "string", "format": "date", "default": "2019-01-01" },
+        "benchmark": { "type": "string", "default": "SPY" },
+        "data_source": { "const": "yfinance" },
+        "base_currency": { "const": "USD" },
+        "in_sample_reproduction_applicable": {
+          "type": "boolean",
+          "description": "track=ported이면 false (원문 수치 재현 불가)"
+        },
+        "known_data_gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "judgment_result": {
+      "type": "object",
+      "description": "M5/M6에서 채워진다. 그 이전 단계에서는 생성하지 마라.",
+      "properties": {
+        "criteria_version": { "type": "string" },
+        "oos_sharpe": { "type": ["number", "null"] },
+        "oos_mdd": { "type": ["number", "null"] },
+        "oos_cagr": { "type": ["number", "null"] },
+        "benchmark_cagr": { "type": ["number", "null"] },
+        "in_sample_mdd_reference": { "type": ["number", "null"] },
+        "conditions_met": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "oos_rebalance_count": { "type": ["integer", "null"] },
+        "verdict": { "enum": ["alive", "weak", "dead", "insufficient_sample"] },
+        "caveats": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "open_questions": {
+      "type": "array",
+      "description": "assumption_needed=true 필드 및 unmapped_assets에서 자동 집계된 확인 목록",
+      "items": {
+        "type": "object",
+        "required": ["field_path", "question"],
+        "properties": {
+          "field_path": { "type": "string" },
+          "question": { "type": "string" },
+          "recommended_default": { "type": ["string", "number", "null"] },
+          "blocking": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

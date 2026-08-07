@@ -1,0 +1,92 @@
+# 티커 치환 화이트리스트 v1.0
+# 이 파일이 Track B 이식 시 티커 치환의 단일 진실 공급원이다.
+# 여기에 없는 자산은 절대 자동 치환하지 말고 사용자에게 질문할 것.
+# 항목 추가는 사용자 승인 후에만 가능하며, DECISIONS.md에 기록한다.
+
+version: "1.0"
+base_currency: USD
+
+# ---------------------------------------------------------------------------
+# 자동 허용 매핑 (mapping_source: "whitelist")
+# asset_class: 원문에서 식별되는 자산군 개념
+# primary: 기본 사용 티커 / alternates: 데이터 결측 시 대안 (사용 시 리포트 표기)
+# ---------------------------------------------------------------------------
+allowed:
+  broad_equity_index:
+    description: "광의 주식지수 (KOSPI, KOSPI200 등 시장 대표 지수)"
+    primary: SPY
+    alternates: [VTI]
+
+  developed_ex_us_equity:
+    description: "미국 외 선진국 주식"
+    primary: EFA
+    alternates: []
+
+  emerging_equity:
+    description: "신흥국 주식"
+    primary: EEM
+    alternates: []
+
+  growth_tech_index:
+    description: "기술/성장주 대표 지수 (원문이 명시적으로 성장주 지수를 지목한 경우만)"
+    primary: QQQ
+    alternates: []
+
+  intermediate_treasury:
+    description: "중기 국채 (3~10년)"
+    primary: IEF
+    alternates: []
+
+  long_treasury:
+    description: "장기 국채 (10년 초과)"
+    primary: TLT
+    alternates: []
+
+  short_treasury_cash:
+    description: "단기 국채 / 현금등가물 / MMF"
+    primary: SHY
+    alternates: [BIL]
+
+  aggregate_bond:
+    description: "종합 채권 (국채+회사채 혼합 지수)"
+    primary: AGG
+    alternates: [BND]
+
+  gold:
+    description: "금"
+    primary: GLD
+    alternates: [IAU]
+
+  real_estate:
+    description: "부동산 / 리츠"
+    primary: VNQ
+    alternates: []
+
+  commodity_broad:
+    description: "광의 원자재 바스켓"
+    primary: DBC
+    alternates: []
+
+# ---------------------------------------------------------------------------
+# 자동 치환 금지 목록 (해당 시 review_status = needs_user_confirm)
+# 유사하다는 이유로 위 allowed 항목에 끼워 맞추지 말 것.
+# ---------------------------------------------------------------------------
+requires_user_approval:
+  - small_cap_equity          # 소형주 (코스닥 등) — 시장 구조가 달라 등가 아님
+  - sector_specific           # 개별 섹터 (반도체, 바이오 등)
+  - factor_tilt               # 가치/퀄리티/저변동성 등 팩터 ETF
+  - single_stock_screening    # 개별 종목 스크리닝 유니버스
+  - leveraged_or_inverse      # 레버리지 / 인버스
+  - currency_or_fx            # 통화 / 환헤지 상품
+  - crypto                    # 암호자산
+  - domestic_specific_metric  # 국내 수급/공매도/세제 의존 지표
+
+# ---------------------------------------------------------------------------
+# 운영 규칙 (코드가 이 값을 읽어 동작을 결정한다)
+# ---------------------------------------------------------------------------
+rules:
+  allow_fuzzy_match: false        # 유사도 기반 자동 매칭 금지
+  require_rationale: true         # 모든 매핑에 근거 문자열 필수
+  on_unlisted_asset: needs_user_confirm
+  # ETF 상장일 이전 구간은 프록시로 대체하지 않고 백테스트 시작일을 늦춘다
+  allow_index_proxy_before_inception: false

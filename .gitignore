@@ -1,0 +1,30 @@
+# --- 원문 비공개 (hard_constraints #5) ---
+data/raw/
+data/archive/
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- 캐시 / 바이너리 산출물 ---
+*.pkl
+cache/
+data/cache/
+*.parquet
+*.h5
+
+# --- OS / 에디터 ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- 로그 / 임시 ---
+*.log
+.env
