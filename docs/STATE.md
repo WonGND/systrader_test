@@ -1,10 +1,12 @@
 # STATE
 
-- 현재 마일스톤: **M1 — 전량 수집 완료 / 게이트 승인 대기**
-- 수집 결과: strategy 172/172 MATCH, basics 181/181 MATCH, 실패 0, 총 353건
-  (사용자 로컬 `data/archive/` — 커밋 안 됨). 보고서: `reports/M1_crawl_report.md`
-- 다음 액션 1순위: 사용자 `python -m src.extractor.index_stats` 출력 전달(보고서 §7 채움)
-  → **M1 게이트 승인** → M2 착수(트랙 분류 + 후보 15개)
+- 현재 마일스톤: **M2 — 트랙 분류 + 대표 전략 선정 (진행 중)**
+- M1: **2026-08-26 승인 종결** ("추천대로"). 353건 아카이브, 172/172·181/181 MATCH,
+  실패 0. 보고서: `reports/M1_crawl_report.md` (§7 통계, §8 승인 기록)
+- M2 방식(Q6 승인): 2단계 깔때기 — ① 파생 특징(`post_features.jsonl`, 커밋 가능)으로
+  1차 스크리닝 → ② 상위 ~30개 본문만 세션에 전달받아 정독 → 후보 15개 표 확정
+- 다음 액션 1순위: 사용자가 로컬에서 `python -m src.extractor.features` 실행 후
+  `data/specs/post_features.jsonl` 커밋·푸시 → 원격 세션이 1차 스크리닝
 - 최종 갱신: 2026-08-26
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)

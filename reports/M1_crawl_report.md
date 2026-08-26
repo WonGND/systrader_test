@@ -70,11 +70,34 @@ M1 종결 자체의 블로킹 질문은 없음. M2 착수 전 확인 1건:
    치환 건수/화이트리스트 밖 치환 유무 + **Track A 실제 개수 명시**)
 5. 사용자가 10개 확정 → M2 종료, M3(엔진) 착수
 
-## 7. 아카이브 통계 (index_stats 출력)
-
-> 아래 통계는 사용자가 `python -m src.extractor.index_stats`를 실행해 전달한
-> 출력으로 채운다. (수집 직후 본 보고서 커밋 시점에는 대기 상태)
+## 7. 아카이브 통계 (index_stats 출력, 2026-08-26 사용자 로컬 실행)
 
 ```
-(대기 중 — 사용자 실행 출력으로 갱신 예정)
+total unique posts: 353
+  basics: 181 (advertised 181)
+  strategy: 172 (advertised 172)
+duplicate content hashes: 0
+posts missing published_at: 0
+posts per year:
+  2014: 40 / 2016: 35 / 2017: 57 / 2018: 33 / 2019: 36 / 2020: 30
+  2021: 46 / 2022: 13 / 2023: 17 / 2024: 29 / 2025: 17
+posts with >=1 image: 353 (100.0%)
+image count buckets: 0: 0 / 1-2: 49 / 3-5: 113 / 6-10: 158 / >10: 33
+text length (chars): min 543, median 3908, mean 4608, max 27800
+posts with text < 500 chars: 0
+content selector usage: .tt_article_useless_p_margin 344, .contents_style 9
+numeric-URL posts: 0
 ```
+
+**해석 (M2에 반영)**
+- 중복 0, 날짜 결측 0, 최소 본문 543자 — 아카이브 품질 양호. 폴백 셀렉터
+  `.contents_style` 사용 9건은 파싱 성공이며 별도 조치 불요.
+- **전 글 100%가 이미지 포함** → `needs_image_review` 판별은 이미지 유무가 아니라
+  "텍스트만으로 파라미터·규칙이 완결되는가"로 판단해야 한다(Q5 보수 원칙 그대로).
+- **2015년 글 0건** (2014: 40 → 2016: 35). 실측 사실로 기록, 보정하지 않음.
+- 인샘플 경계(2018-12-31) 이전 글 165건 / 이후(2019~) 188건.
+
+## 8. 승인 기록
+
+- **2026-08-26 사용자 승인** ("추천대로 진행해줘"): M1 게이트 종결 + Q6 권장안
+  (2단계 깔때기) 채택. M2 착수.
