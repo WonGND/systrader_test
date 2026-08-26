@@ -42,6 +42,29 @@ def test_chrome_filter_across_pages():
     assert posts[0].endswith("0-%EA%B8%800") and posts[5].endswith("1-%EA%B8%800")
 
 
+def test_reclaim_widget_featured_members():
+    """A category member featured in the sidebar repeats on every page (so the
+    frequency filter calls it chrome), but it also sits inside the real list
+    container on its own page — it must be reclaimed. Reproduces the
+    validation-run deficit (168/172, 178/181)."""
+    popular = f"{BASE}/entry/%EC%9D%B8%EA%B8%B0%EA%B8%80"       # featured member
+    pages_html, per_page = [], []
+    for p in range(4):
+        uniques = [f"{BASE}/entry/p{p}-%EA%B8%80{i}" for i in range(5)]
+        in_list = uniques + ([popular] if p == 2 else [])       # real home page is 2
+        html = _listing_page(in_list, CHROME + [popular])       # also in every sidebar
+        pages_html.append(html)
+        per_page.append(list_parser.extract_post_links(html))
+    entries, chrome = list_parser.split_chrome_links(per_page)
+    assert popular in chrome and popular not in entries          # 기존 필터는 누락시킴
+    posts, remaining, reclaimed = list_parser.reclaim_widget_members(
+        pages_html, entries, chrome)
+    assert reclaimed == [popular]
+    assert popular in posts and len(posts) == 21                 # 20 + 복원 1
+    assert popular not in remaining
+    assert set(remaining) == set(CHROME)                         # 순수 위젯만 잔류
+
+
 def test_chrome_filter_single_page_keeps_everything():
     page = list_parser.extract_post_links(
         _listing_page([f"{BASE}/entry/only-%EA%B8%80"], CHROME))

@@ -32,6 +32,9 @@ def crawl_category(fetcher, key: str, limit, dry_run: bool, state: dict) -> dict
     posts, chrome, pages = listing["posts"], listing["chrome"], listing["pages"]
     print(f"  listing pages walked: {pages}")
     print(f"  chrome links filtered (sidebar widgets): {len(chrome)}")
+    print(f"  widget-featured members reclaimed into list: {len(listing['reclaimed'])}")
+    for u in listing["reclaimed"]:
+        print(f"    reclaimed: {u}")
     print(f"  candidate posts: {len(posts)} vs advertised {cat['expected_count']}"
           f"  -> {'MATCH' if len(posts) == cat['expected_count'] else 'MISMATCH — report, do not correct'}")
 
