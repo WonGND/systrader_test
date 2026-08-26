@@ -41,7 +41,10 @@
 |---|---|---|---|
 | Q6 | resolved | 원격 세션의 원문 접근 문제 처리 방식 | **2단계 깔때기 승인됨**: 파생 특징 1차 선별 → 상위 ~30개 본문만 세션 전달(커밋 아님) → 정독 후 후보 15개 |
 | W7 | resolved | 특징 파일 수신(2026-08-26, 353건). 1차 스크리닝 완료 → `data/specs/m2_shortlist.json` 32건 확정 |
-| W8 | blocking | 사용자가 `python -m src.extractor.make_bundle --parts 4` 실행 후 번들 파일 4개를 세션에 전달(첨부/붙여넣기, **커밋 금지**) 대기 |
+| W8 | resolved | 번들 4개 수신·정독 완료(2026-08-26, 32건 전문) |
+| W9 | blocking | **후보 15개 중 사용자 10개 확정 대기** (`reports/M2_candidate_selection.md` §4 — 권장: C1~C9 + C13) |
+| Q7 | blocking(C6 채택 시) | HAA 공격형 8자산 목록이 원문에 없음 → Keller 원논문 유니버스(SPY,IWM,EFA,EEM,VNQ,DBC,IEF,TLT)를 user_approved로 채울지 | 승인 권장 (원문 비인용 사실을 스펙에 명기) |
+| Q8 | blocking(C7 채택 시) | 계절성 전략의 SPY·TLT 동시 신호 시 배분 미명시 | 50:50 가정값 승인 권장 (assumption_needed로 리포트 명기) |
 
 ---
 

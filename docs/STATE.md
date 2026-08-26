@@ -5,9 +5,10 @@
   실패 0. 보고서: `reports/M1_crawl_report.md` (§7 통계, §8 승인 기록)
 - M2 방식(Q6 승인): 2단계 깔때기 — ① 파생 특징(`post_features.jsonl`, 커밋 가능)으로
   1차 스크리닝 → ② 상위 ~30개 본문만 세션에 전달받아 정독 → 후보 15개 표 확정
-- 1차 스크리닝 완료: shortlist 32건(`data/specs/m2_shortlist.json`, Track A 힌트 17 / B 힌트 15)
-- 다음 액션 1순위: 사용자가 `python -m src.extractor.make_bundle --parts 4` 실행 →
-  번들 4개 파일을 세션에 전달(커밋 금지) → 정독 후 후보 15개 표 작성
+- 본문 정독 완료(32건) → **후보 15개 확정 제시** (`reports/M2_candidate_selection.md`)
+- **Track A 실제 개수 = 12** → M4 축소 실행 불필요 (원문 수치 텍스트 대조 가능 5건)
+- 다음 액션 1순위: **사용자 10개 확정 대기** (권장: C1~C9+C13, Q7/Q8 동반)
+- 확정 후: 스펙 JSON 10건 생성(source_quote 필수) → 스키마 검증 → M2 게이트 종결
 - 최종 갱신: 2026-08-26
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
