@@ -1,8 +1,10 @@
 # STATE
 
-- 현재 마일스톤: **M1 — 본실행 승인됨 (2026-08-26) / 로컬 실행 진행 중**
-- 다음 액션 1순위: 사용자 로컬 검증 실행(`python -m src.crawler.run --category all --limit 5`)
-  출력 확인 → 이상 없으면 전량 수집(`--category all`) → SUMMARY 수신 → M1 게이트 보고
+- 현재 마일스톤: **M1 — 전량 수집 완료 / 게이트 승인 대기**
+- 수집 결과: strategy 172/172 MATCH, basics 181/181 MATCH, 실패 0, 총 353건
+  (사용자 로컬 `data/archive/` — 커밋 안 됨). 보고서: `reports/M1_crawl_report.md`
+- 다음 액션 1순위: 사용자 `python -m src.extractor.index_stats` 출력 전달(보고서 §7 채움)
+  → **M1 게이트 승인** → M2 착수(트랙 분류 + 후보 15개)
 - 최종 갱신: 2026-08-26
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
