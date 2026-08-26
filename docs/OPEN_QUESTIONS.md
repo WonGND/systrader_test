@@ -28,8 +28,8 @@
 ### 현재 대기 중
 | # | 상태 | 내용 |
 |---|---|---|
-| W1 | blocking | **사용자의 로컬 탐침 실행 결과 대기** — `python "src\crawler\probe.py" --out "reports\probe_output.txt"` 출력 전달 필요 |
-| W2 | blocking | 탐침 결과 검토 후 **M1 크롤링 본실행 승인** |
+| W1 | resolved | 탐침 실행 완료(2026-08-26). robots 허용, 글 수 172/181 정확 일치. 실측값은 M0 보고서 §3.3 |
+| W2 | blocking | **M1 크롤링 본실행 승인 대기.** 승인 시: 로컬에서 `python -m src.crawler.run --category all --limit 5` (검증) → 출력 확인 → `python -m src.crawler.run --category all` (전량 약 353건, 2초 간격, 중단 시 재개 가능) |
 
 ---
 

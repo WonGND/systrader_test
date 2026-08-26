@@ -1,10 +1,20 @@
 # STATE
 
-- 현재 마일스톤: **M0 — 착수 / 구조 조사** (Q1~Q5 권장안 승인됨 — "추천대로")
-- 다음 액션 1순위: **사용자가 로컬에서 탐침 실행 → 출력 전달**
-  (`python "src\crawler\probe.py" --out "reports\probe_output.txt"`)
-- 그 다음: 탐침 결과로 M0 보고서 §3.3 실측값 채움 → M1 크롤러 구현 → **M1 본실행 승인 대기**
-- 최종 갱신: 2026-08-07
+- 현재 마일스톤: **M1 — 크롤러 구현 완료 / 본실행 승인 대기**
+- 다음 액션 1순위: **사용자의 M1 본실행 승인** → 로컬에서 검증 실행(`--limit 5`) →
+  출력 확인 후 전량 수집 → M1 게이트 보고
+- 최종 갱신: 2026-08-26
+
+## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
+- robots.txt: 크롤링 **허용** (/guestbook, /manage, /search 등만 불허)
+- 글 수: "실전 투자 전략" 172 = 예상 172 **정확 일치**, "투자의 기초" 181 = 예상 181 **정확 일치**
+- 두 카테고리는 상위 "systrader79 칼럼"(451)의 하위 카테고리 (451=172+181+1+97 산술 일치)
+- 페이지네이션 `?page=N`, 글 URL `/entry/<슬러그>` + 일부 `/N`
+- 셀렉터(실측): 제목 `og:title` / 날짜 `article:published_time`(ISO) /
+  본문 `.tt_article_useless_p_margin` → `.contents_style` (`.entry-content`는 광고 혼입으로 기각)
+- 목록 페이지에 사이드바 위젯 링크 오염(~55 링크 vs 실제 ~28글) → 크롤러가
+  반복 링크 필터링 + 172/181 대조 자가 검증
+- 상세: `reports/M0_survey_and_M1_plan.md` §3.3
 
 ## 체크리스트
 - [x] 디렉터리 스캐폴딩 생성
@@ -14,7 +24,9 @@
 - [x] schemas/strategy_spec.schema.json 생성
 - [x] docs 뼈대 문서 생성 (DECISIONS / OPEN_QUESTIONS / data_limitations /
       needs_image_review / excluded_domestic / README)
-- [ ] 블로그 구조 조사 완료 (robots.txt 확인 포함) — **차단됨 (B-01 참조, 2026-08-07 재시도에서도 동일 403 확인)**
+- [x] 블로그 구조 조사 완료 (robots.txt 허용 확인) — 2026-08-26 로컬 탐침 실측으로 해소
+- [x] M1 크롤러 구현 (fetcher/list_parser/post_parser/archiver/checkpoint/run)
+- [x] 크롤러 오프라인 단위 테스트 6건 통과 (tests/crawler/test_parsers.py)
 - [x] config/backtest_defaults.yaml 생성 (CLAUDE.md §5 값 그대로, DECISIONS.md 기록)
 - [x] requirements.txt 생성
 - [x] 원문 파일 3종 정밀 재검증 — 스키마·화이트리스트·CLAUDE.md 핵심 값 31/31 지시서 일치
@@ -23,7 +35,10 @@
 
 ## 블로커
 
-### B-01. 실행 환경의 아웃바운드 네트워크 정책으로 외부 도메인 접근 불가 (blocking)
+### B-01. 원격 세션의 아웃바운드 네트워크 정책으로 외부 도메인 접근 불가 (완화됨)
+- **2026-08-26 갱신**: 로컬 실행 경로(Q1 승인)로 우회 불필요해짐. 크롤링·탐침은
+  사용자 로컬에서 실행하고 출력만 전달받는다. 원격 세션 자체의 차단은 여전하다
+  (yfinance 관련 영향은 B-02 참조).
 - 증상: `stock79.tistory.com:443` CONNECT에 게이트웨이가 403 응답
   (`curl` 오류 56, WebFetch 403).
 - 프록시 진단(`$HTTPS_PROXY/__agentproxy/status`)의 `recentRelayFailures`:
