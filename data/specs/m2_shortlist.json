@@ -1,0 +1,296 @@
+{
+ "version": "1.0",
+ "created": "2026-08-26",
+ "purpose": "M2 full-text reading shortlist (screened from post_features.jsonl)",
+ "note": "track_hint is a screening guess, NOT a classification; final track requires full-text evidence",
+ "posts": [
+  {
+   "post_id": "Defense-First-자산배분전략-방어-자산-모멘텀을-활용한-혁신적-동적-자산배분-전략",
+   "title": "\"Defense First\" 자산배분전략 : 방어 자산 모멘텀을 활용한 혁신적 동적 자산배분 전략",
+   "url": "https://stock79.tistory.com/entry/Defense-First-%EC%9E%90%EC%82%B0%EB%B0%B0%EB%B6%84%EC%A0%84%EB%9E%B5-%EB%B0%A9%EC%96%B4-%EC%9E%90%EC%82%B0-%EB%AA%A8%EB%A9%98%ED%85%80%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%98%81%EC%8B%A0%EC%A0%81-%EB%8F%99%EC%A0%81-%EC%9E%90%EC%82%B0%EB%B0%B0%EB%B6%84-%EC%A0%84%EB%9E%B5",
+   "year": "2025",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "Larry-Connors의-RSI2-역추세-전략",
+   "title": "Larry Connors의 RSI(2) 역추세 전략",
+   "url": "https://stock79.tistory.com/entry/Larry-Connors%EC%9D%98-RSI2-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+   "year": "2024",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "mean_reversion"
+  },
+  {
+   "post_id": "과최적화를-피하는-CAGR-26-역추세-전략",
+   "title": "과최적화를 피하는 CAGR 26% 역추세 전략",
+   "url": "https://stock79.tistory.com/entry/%EA%B3%BC%EC%B5%9C%EC%A0%81%ED%99%94%EB%A5%BC-%ED%94%BC%ED%95%98%EB%8A%94-CAGR-26-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+   "year": "2024",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "volatility"
+  },
+  {
+   "post_id": "다중-타임-프레임-추세-추종-전략",
+   "title": "다중 타임 프레임 추세 추종 전략",
+   "url": "https://stock79.tistory.com/entry/%EB%8B%A4%EC%A4%91-%ED%83%80%EC%9E%84-%ED%94%84%EB%A0%88%EC%9E%84-%EC%B6%94%EC%84%B8-%EC%B6%94%EC%A2%85-%EC%A0%84%EB%9E%B5",
+   "year": "2025",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "volatility"
+  },
+  {
+   "post_id": "럼버-골드-비율-전략",
+   "title": "럼버-골드 비율  전략",
+   "url": "https://stock79.tistory.com/entry/%EB%9F%BC%EB%B2%84-%EA%B3%A8%EB%93%9C-%EB%B9%84%EC%9C%A8-%EC%A0%84%EB%9E%B5",
+   "year": "2025",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "나스닥과-국채-스프레드를-이용한-역추세-전략",
+   "title": "나스닥과 국채 스프레드를 이용한 역추세 전략",
+   "url": "https://stock79.tistory.com/entry/%EB%82%98%EC%8A%A4%EB%8B%A5%EA%B3%BC-%EA%B5%AD%EC%B1%84-%EC%8A%A4%ED%94%84%EB%A0%88%EB%93%9C%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+   "year": "2024",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "mean_reversion"
+  },
+  {
+   "post_id": "환노출을-이용한-dynamic-permanent-portfolio-전략",
+   "title": "환노출을 이용한 dynamic permanent portfolio 전략",
+   "url": "https://stock79.tistory.com/entry/%ED%99%98%EB%85%B8%EC%B6%9C%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-dynamic-permanent-portfolio-%EC%A0%84%EB%9E%B5",
+   "year": "2024",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "동적-영구-올웨더-포트폴리오-전략-72",
+   "title": "동적 영구 / 올웨더 포트폴리오 전략 (72)",
+   "url": "https://stock79.tistory.com/entry/%EB%8F%99%EC%A0%81-%EC%98%81%EA%B5%AC-%EC%98%AC%EC%9B%A8%EB%8D%94-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EC%A0%84%EB%9E%B5-72",
+   "year": "2020",
+   "category_key": "basics",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "실전-투자-전략-17-자산군-비중-배분-X-평균-모멘텀-스코어-배분-파이썬-코드",
+   "title": "실전 투자 전략 (17) - 자산군 비중 배분 X 평균 모멘텀 스코어 배분 (파이썬 코드)",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-17-%EC%9E%90%EC%82%B0%EA%B5%B0-%EB%B9%84%EC%A4%91-%EB%B0%B0%EB%B6%84-X-%ED%8F%89%EA%B7%A0-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%8A%A4%EC%BD%94%EC%96%B4-%EB%B0%B0%EB%B6%84-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%BD%94%EB%93%9C",
+   "year": "2016",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-14-자산군-비중-배분-X-평균-모멘텀-스코어-배분",
+   "title": "실전 투자 전략 (14) - 자산군 비중 배분 X 평균 모멘텀 스코어 배분",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-14-%EC%9E%90%EC%82%B0%EA%B5%B0-%EB%B9%84%EC%A4%91-%EB%B0%B0%EB%B6%84-X-%ED%8F%89%EA%B7%A0-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%8A%A4%EC%BD%94%EC%96%B4-%EB%B0%B0%EB%B6%84",
+   "year": "2014",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-32-동적-자산-배분-전략의-몰락",
+   "title": "실전 투자 전략 (32) - 동적 자산 배분 전략의 몰락?",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-32-%EB%8F%99%EC%A0%81-%EC%9E%90%EC%82%B0-%EB%B0%B0%EB%B6%84-%EC%A0%84%EB%9E%B5%EC%9D%98-%EB%AA%B0%EB%9D%BD",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "실전-투자-전략-60-Accelerating-dual-momentum",
+   "title": "실전 투자 전략 (60) - Accelerating dual momentum",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-60-Accelerating-dual-momentum",
+   "year": "2018",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-136-Hybrid-asset-allocation",
+   "title": "실전 투자 전략 (136) - Hybrid asset allocation",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-136-Hybrid-asset-allocation",
+   "year": "2023",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-115-주중-월말-계절성을-이용한-절대-수익-전략",
+   "title": "실전 투자 전략 (115) - 주중, 월말 계절성을 이용한 절대 수익 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-115-%EC%A3%BC%EC%A4%91-%EC%9B%94%EB%A7%90-%EA%B3%84%EC%A0%88%EC%84%B1%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A0%88%EB%8C%80-%EC%88%98%EC%9D%B5-%EC%A0%84%EB%9E%B5",
+   "year": "2021",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "market_timing"
+  },
+  {
+   "post_id": "상관성-조절-전략-3-23",
+   "title": "상관성 조절 전략 3 (23)",
+   "url": "https://stock79.tistory.com/entry/%EC%83%81%EA%B4%80%EC%84%B1-%EC%A1%B0%EC%A0%88-%EC%A0%84%EB%9E%B5-3-23",
+   "year": "2014",
+   "category_key": "basics",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "자산-배분-전략에서-최고의-방어-자산군은-117-1",
+   "title": "자산 배분 전략에서 최고의 방어 자산군은? (117)",
+   "url": "https://stock79.tistory.com/entry/%EC%9E%90%EC%82%B0-%EB%B0%B0%EB%B6%84-%EC%A0%84%EB%9E%B5%EC%97%90%EC%84%9C-%EC%B5%9C%EA%B3%A0%EC%9D%98-%EB%B0%A9%EC%96%B4-%EC%9E%90%EC%82%B0%EA%B5%B0%EC%9D%80-117-1",
+   "year": "2022",
+   "category_key": "basics",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "실전-투자-전략-110-AI-ETF를-이용한-동적-자산-배분-전략-1",
+   "title": "실전 투자 전략 (110) - AI ETF를 이용한 동적 자산 배분 전략 (1)",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-110-AI-ETF%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%8F%99%EC%A0%81-%EC%9E%90%EC%82%B0-%EB%B0%B0%EB%B6%84-%EC%A0%84%EB%9E%B5-1",
+   "year": "2021",
+   "category_key": "strategy",
+   "track_hint": "native_overseas",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "실전-투자-전략-31-Modified-PAA-model을-이용한-절대-수익-전략-4",
+   "title": "실전 투자 전략 (31) - Modified PAA model을 이용한 절대 수익 전략 (4)",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-31-Modified-PAA-model%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A0%88%EB%8C%80-%EC%88%98%EC%9D%B5-%EC%A0%84%EB%9E%B5-4",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-35-단순-이평선-돌파-전략",
+   "title": "실전 투자 전략 (35) - 단순 이평선 돌파 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-35-%EB%8B%A8%EC%88%9C-%EC%9D%B4%ED%8F%89%EC%84%A0-%EB%8F%8C%ED%8C%8C-%EC%A0%84%EB%9E%B5",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "trend_following"
+  },
+  {
+   "post_id": "실전-투자-전략-48-변동성-돌파-전략의-핵심-원리-1",
+   "title": "실전 투자 전략 (48) - 변동성 돌파 전략의 핵심 원리 (1)",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-48-%EB%B3%80%EB%8F%99%EC%84%B1-%EB%8F%8C%ED%8C%8C-%EC%A0%84%EB%9E%B5%EC%9D%98-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-1",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "volatility"
+  },
+  {
+   "post_id": "변동성-조절-전략-5-Target-volatility-19",
+   "title": "변동성 조절 전략 5 (Target volatility) (19)",
+   "url": "https://stock79.tistory.com/entry/%EB%B3%80%EB%8F%99%EC%84%B1-%EC%A1%B0%EC%A0%88-%EC%A0%84%EB%9E%B5-5-Target-volatility-19",
+   "year": "2014",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "volatility"
+  },
+  {
+   "post_id": "실전-투자-전략-39-역추세-전략-RSI2-system",
+   "title": "실전 투자 전략 (39) - 역추세 전략, RSI(2) system",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-39-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5-RSI2-system",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "mean_reversion"
+  },
+  {
+   "post_id": "실전-투자-전략-41-비대칭-모멘텀-전략",
+   "title": "실전 투자 전략 (41) - 비대칭 모멘텀 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-41-%EB%B9%84%EB%8C%80%EC%B9%AD-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%A0%84%EB%9E%B5",
+   "year": "2017",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "실전-투자-전략-152-상관-관계를-이용한-모멘텀-전략",
+   "title": "실전 투자 전략 (152) - 상관 관계를 이용한 모멘텀 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-152-%EC%83%81%EA%B4%80-%EA%B4%80%EA%B3%84%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%A0%84%EB%9E%B5",
+   "year": "2024",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "momentum"
+  },
+  {
+   "post_id": "리밸런싱-효과를-이용한-위험조정수익률-향상-전략-20",
+   "title": "리밸런싱 효과를 이용한 위험조정수익률 향상 전략 (20)",
+   "url": "https://stock79.tistory.com/entry/%EB%A6%AC%EB%B0%B8%EB%9F%B0%EC%8B%B1-%ED%9A%A8%EA%B3%BC%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9C%84%ED%97%98%EC%A1%B0%EC%A0%95%EC%88%98%EC%9D%B5%EB%A5%A0-%ED%96%A5%EC%83%81-%EC%A0%84%EB%9E%B5-20",
+   "year": "2018",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "리밸런싱-효과를-이용한-위험조정수익률-향상-전략-21",
+   "title": "리밸런싱 효과를 이용한 위험조정수익률 향상 전략 (21)",
+   "url": "https://stock79.tistory.com/entry/%EB%A6%AC%EB%B0%B8%EB%9F%B0%EC%8B%B1-%ED%9A%A8%EA%B3%BC%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9C%84%ED%97%98%EC%A1%B0%EC%A0%95%EC%88%98%EC%9D%B5%EB%A5%A0-%ED%96%A5%EC%83%81-%EC%A0%84%EB%9E%B5-21",
+   "year": "2018",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "MDD에-근접-포트폴리오-전략-105",
+   "title": "MDD 근접 포트폴리오 전략 (105)",
+   "url": "https://stock79.tistory.com/entry/MDD%EC%97%90-%EA%B7%BC%EC%A0%91-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EC%A0%84%EB%9E%B5-105",
+   "year": "2021",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "실전-투자-전략-53-마켓-타이밍과-변동성-조절을-이용한-양방향-돌파-전략",
+   "title": "실전 투자 전략 (53) - 마켓 타이밍과 변동성 조절을 이용한 양방향 돌파 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-53-%EB%A7%88%EC%BC%93-%ED%83%80%EC%9D%B4%EB%B0%8D%EA%B3%BC-%EB%B3%80%EB%8F%99%EC%84%B1-%EC%A1%B0%EC%A0%88%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%96%91%EB%B0%A9%ED%96%A5-%EB%8F%8C%ED%8C%8C-%EC%A0%84%EB%9E%B5",
+   "year": "2018",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "volatility"
+  },
+  {
+   "post_id": "실전-투자-전략-56-평균-노이즈-비율과-마켓-타이밍을-결합한-변동성-돌파-전략",
+   "title": "실전 투자 전략 (56) - 평균 노이즈 비율과 마켓 타이밍을 결합한 변동성 돌파 전략",
+   "url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-56-%ED%8F%89%EA%B7%A0-%EB%85%B8%EC%9D%B4%EC%A6%88-%EB%B9%84%EC%9C%A8%EA%B3%BC-%EB%A7%88%EC%BC%93-%ED%83%80%EC%9D%B4%EB%B0%8D%EC%9D%84-%EA%B2%B0%ED%95%A9%ED%95%9C-%EB%B3%80%EB%8F%99%EC%84%B1-%EB%8F%8C%ED%8C%8C-%EC%A0%84%EB%9E%B5",
+   "year": "2018",
+   "category_key": "strategy",
+   "track_hint": "ported",
+   "dominant_group": "trend_following"
+  },
+  {
+   "post_id": "포트폴리오-리밸런싱-언제-해야-가장-좋을까-70",
+   "title": "포트폴리오 리밸런싱 언제 해야 가장 좋을까? (70)",
+   "url": "https://stock79.tistory.com/entry/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EB%A6%AC%EB%B0%B8%EB%9F%B0%EC%8B%B1-%EC%96%B8%EC%A0%9C-%ED%95%B4%EC%95%BC-%EA%B0%80%EC%9E%A5-%EC%A2%8B%EC%9D%84%EA%B9%8C-70",
+   "year": "2019",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "포트폴리오-리밸런싱-언제-해야-가장-좋을까-71",
+   "title": "포트폴리오 리밸런싱 언제 해야 가장 좋을까? (71)",
+   "url": "https://stock79.tistory.com/entry/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EB%A6%AC%EB%B0%B8%EB%9F%B0%EC%8B%B1-%EC%96%B8%EC%A0%9C-%ED%95%B4%EC%95%BC-%EA%B0%80%EC%9E%A5-%EC%A2%8B%EC%9D%84%EA%B9%8C-71",
+   "year": "2019",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "asset_allocation"
+  },
+  {
+   "post_id": "주식시장을-이긴-전략들-4-모멘텀전략과-역모멘텀전략",
+   "title": "주식시장을 이긴 전략들 (4) - 모멘텀전략과 역모멘텀전략",
+   "url": "https://stock79.tistory.com/entry/%EC%A3%BC%EC%8B%9D%EC%8B%9C%EC%9E%A5%EC%9D%84-%EC%9D%B4%EA%B8%B4-%EC%A0%84%EB%9E%B5%EB%93%A4-4-%EB%AA%A8%EB%A9%98%ED%85%80%EC%A0%84%EB%9E%B5%EA%B3%BC-%EC%97%AD%EB%AA%A8%EB%A9%98%ED%85%80%EC%A0%84%EB%9E%B5",
+   "year": "2017",
+   "category_key": "basics",
+   "track_hint": "ported",
+   "dominant_group": "momentum"
+  }
+ ]
+}
