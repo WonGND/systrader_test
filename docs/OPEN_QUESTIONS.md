@@ -40,7 +40,8 @@
 | # | 상태 | 질문 | 확정/권장안 |
 |---|---|---|---|
 | Q6 | resolved | 원격 세션의 원문 접근 문제 처리 방식 | **2단계 깔때기 승인됨**: 파생 특징 1차 선별 → 상위 ~30개 본문만 세션 전달(커밋 아님) → 정독 후 후보 15개 |
-| W7 | blocking | 사용자가 `python -m src.extractor.features` 실행 후 `data/specs/post_features.jsonl` 커밋·푸시 대기 |
+| W7 | resolved | 특징 파일 수신(2026-08-26, 353건). 1차 스크리닝 완료 → `data/specs/m2_shortlist.json` 32건 확정 |
+| W8 | blocking | 사용자가 `python -m src.extractor.make_bundle --parts 4` 실행 후 번들 파일 4개를 세션에 전달(첨부/붙여넣기, **커밋 금지**) 대기 |
 
 ---
 
