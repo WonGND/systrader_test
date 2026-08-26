@@ -74,18 +74,15 @@
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
 ## 미결
-- **Q1~Q5** (`docs/OPEN_QUESTIONS.md`) — M1 착수 전 확인 필요
-- Track A 실제 개수 → M4 범위 확정 (M2에서 결정)
-- 화이트리스트 추가 필요 자산군 (있을 경우, M2에서 결정)
+- W8 (`docs/OPEN_QUESTIONS.md`): 사용자 번들 전달 대기
+- Track A 실제 개수 → M4 범위 확정 (M2 후보 표에서 보고)
+- 화이트리스트 추가 필요 자산군 (있을 경우, M2에서 질문)
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. 사용자가 전달한 **탐침 출력**(`reports/probe_output.txt` 또는 붙여넣기)이 있는지 확인한다.
-3. 있으면: `reports/M0_survey_and_M1_plan.md` §3.3을 실측값으로 채우고,
-   실측 셀렉터 기반으로 M1 크롤러(`src/crawler/`)를 구현한다(로컬 실행용).
-   robots.txt가 불허로 나왔으면 구현하지 말고 즉시 보고한다.
-4. 없으면: 사용자에게 탐침 실행을 요청하고 대기한다.
-5. **M1 크롤링 본실행은 별도 승인 후에만** 사용자가 로컬에서 수행한다.
-6. (선택) B-01 해소 여부 재확인:
-   `curl -sS -o /dev/null -w "%{http_code}" https://stock79.tistory.com/robots.txt`
-   — 200이면 원격 실측으로 전환 가능.
+2. 사용자가 전달한 **M2 번들**(`m2_bundle_part1~4.txt` 첨부/붙여넣기)이 있는지 확인한다.
+3. 있으면: 32건 정독 → 후보 15개 표 작성(트랙/유형/survivorship_risk/M4 재현 가능/
+   치환 건수/화이트리스트 밖 치환 유무 + **Track A 실제 개수 보고**) → 사용자 10개 확정 대기.
+   스펙 필드는 반드시 원문 인용(source_quote) 기반. 키워드 히트로 채우지 않는다.
+4. 없으면: 사용자에게 `python -m src.extractor.make_bundle --parts 4` 실행·전달을 요청한다.
+5. 후보 확정 전에는 M3(엔진)에 착수하지 않는다.
