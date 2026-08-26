@@ -1,7 +1,9 @@
 # STATE
 
-- 현재 마일스톤: **M0 — 착수 / 구조 조사**
-- 다음 액션 1순위: **네트워크 접근 방안 결정 대기** → 확보 후 STEP 3(구조 조사) 재시도 → M1 승인
+- 현재 마일스톤: **M0 — 착수 / 구조 조사** (Q1~Q5 권장안 승인됨 — "추천대로")
+- 다음 액션 1순위: **사용자가 로컬에서 탐침 실행 → 출력 전달**
+  (`python "src\crawler\probe.py" --out "reports\probe_output.txt"`)
+- 그 다음: 탐침 결과로 M0 보고서 §3.3 실측값 채움 → M1 크롤러 구현 → **M1 본실행 승인 대기**
 - 최종 갱신: 2026-08-07
 
 ## 체크리스트
@@ -58,9 +60,12 @@
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. B-01 해소 여부를 먼저 확인한다
-   (`curl -sS -o /dev/null -w "%{http_code}" https://stock79.tistory.com/robots.txt`).
-3. 해소됐으면 STEP 3 구조 조사를 수행하고 결과를
-   `reports/M0_survey_and_M1_plan.md`의 "STEP 3 조사 결과"에 채운다.
-4. 해소되지 않았으면 Q1 답변에 따라 로컬 실행 경로로 전환한다.
-5. **승인 없이 크롤링을 실행하지 않는다.**
+2. 사용자가 전달한 **탐침 출력**(`reports/probe_output.txt` 또는 붙여넣기)이 있는지 확인한다.
+3. 있으면: `reports/M0_survey_and_M1_plan.md` §3.3을 실측값으로 채우고,
+   실측 셀렉터 기반으로 M1 크롤러(`src/crawler/`)를 구현한다(로컬 실행용).
+   robots.txt가 불허로 나왔으면 구현하지 말고 즉시 보고한다.
+4. 없으면: 사용자에게 탐침 실행을 요청하고 대기한다.
+5. **M1 크롤링 본실행은 별도 승인 후에만** 사용자가 로컬에서 수행한다.
+6. (선택) B-01 해소 여부 재확인:
+   `curl -sS -o /dev/null -w "%{http_code}" https://stock79.tistory.com/robots.txt`
+   — 200이면 원격 실측으로 전환 가능.

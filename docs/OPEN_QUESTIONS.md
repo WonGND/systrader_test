@@ -15,14 +15,21 @@
 ## M0 — 착수 / 구조 조사
 
 전문과 근거는 `reports/M0_survey_and_M1_plan.md` §5 참조.
+**2026-08-07 사용자 답변 "추천대로"로 Q1~Q5 전부 권장안으로 확정** (DECISIONS.md 기록).
 
-| # | 상태 | 질문 | 권장안 |
+| # | 상태 | 질문 | 확정 내용 |
 |---|---|---|---|
-| Q1 | blocking | 크롤링을 어디서 실행할까? 현 컨테이너는 외부 도메인이 차단(B-01)되어 있고 수집 결과도 gitignore라 커밋되지 않는다 | **로컬 Windows 실행** (여기서는 코드만 작성·커밋). 가능하면 `stock79.tistory.com` allowlist 추가를 병행 |
-| Q2 | blocking (Q1이 로컬 단독일 때) | DOM 셀렉터를 실측으로 확보할 방법은? 추측 작성은 하지 않는다 | **읽기 전용 탐침 스크립트(`src/crawler/probe.py`)를 먼저 커밋** → 사용자가 로컬 1회 실행 후 출력 전달. 샘플 HTML 제공도 병행 가능 |
-| Q3 | blocking | 두 대상 카테고리의 정확한 URL은? 지시서에는 카테고리 이름만 있어 추측하지 않았다 | 브라우저 주소창 URL 2개 전달. 불가 시 탐침이 카테고리 목록을 열거하도록 구현 |
-| Q4 | non-blocking | 아카이브 저장 형식과 이미지 처리 범위는? | 원본 HTML + 추출 텍스트 병행 저장(`encoding="utf-8"`), **이미지 바이너리 미다운로드**(URL·개수·alt만 기록), `index.jsonl` + `checkpoint.json` |
-| Q5 | non-blocking | "이미지 의존" 자동 판별을 얼마나 보수적으로? | **보수적(a)**. 단 자동 판별은 플래그일 뿐이며 M2에서 사람이 검토하도록 사유·이미지 위치를 함께 기록 |
+| Q1 | resolved | 크롤링 실행 위치 | **로컬 Windows 실행**. 원격 세션은 코드 작성·커밋만. allowlist 추가는 선택적 병행 |
+| Q2 | resolved | DOM 셀렉터 실측 방법 | **읽기 전용 탐침 `src/crawler/probe.py`** 커밋 완료 → 사용자가 로컬 1회 실행 후 출력 전달 |
+| Q3 | resolved | 카테고리 URL 확보 | **탐침이 카테고리 목록을 자동 열거** (이름·URL·표시 글 수 출력) |
+| Q4 | resolved | 아카이브 형식·이미지 범위 | 원본 HTML + 추출 텍스트 병행(`encoding="utf-8"`), 이미지 바이너리 미다운로드(URL·개수·alt만), `index.jsonl` + `checkpoint.json` |
+| Q5 | resolved | 이미지 의존 판별 보수성 | 보수적 판별 + 자동 판별은 플래그일 뿐, M2에서 사람이 검토(사유·이미지 위치 병기) |
+
+### 현재 대기 중
+| # | 상태 | 내용 |
+|---|---|---|
+| W1 | blocking | **사용자의 로컬 탐침 실행 결과 대기** — `python "src\crawler\probe.py" --out "reports\probe_output.txt"` 출력 전달 필요 |
+| W2 | blocking | 탐침 결과 검토 후 **M1 크롤링 본실행 승인** |
 
 ---
 
