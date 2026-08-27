@@ -112,6 +112,10 @@ def run_backtest(close: pd.DataFrame, open_: pd.DataFrame, targets: pd.DataFrame
         # overnight: prev close -> today's open (old holdings)
         if prev_close_prices is not None:
             ratio = (o / prev_close_prices).reindex(cols)
+            stale = ratio.isna() & (hold.abs() > 0)
+            for tkr in stale[stale].index:
+                warnings.append(f"{dt.date()} overnight: {tkr} price missing — "
+                                f"position value held flat (not interpolated)")
             hold = hold * ratio.where(hold.abs() > 0, 1.0).fillna(1.0)
 
         # execute pending rebalance at today's open

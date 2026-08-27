@@ -73,6 +73,50 @@ def test_buy_and_hold_equals_price_ratio():
     assert np.allclose(res.equity.iloc[1:], expected.iloc[1:], rtol=1e-12)
 
 
+def make_gapped_prices(n=400, seed=11, start="2015-01-01"):
+    """Synthetic prices WITH overnight gaps (open_t != close_{t-1}), as in real
+    markets. The gapless generator above cannot distinguish an entry filled at
+    the open from one filled at the close, so it hides a whole class of bugs."""
+    rng = np.random.default_rng(seed)
+    idx = pd.bdate_range(start, periods=n)
+    close_v = 100 * np.cumprod(1 + rng.normal(0.0005, 0.01, n))
+    gap = rng.normal(0.0, 0.004, n)
+    open_v = np.concatenate([[100.0], close_v[:-1] * (1 + gap[1:])])
+    return (pd.DataFrame({"AAA": open_v}, index=idx),
+            pd.DataFrame({"AAA": close_v}, index=idx))
+
+
+def test_gapped_buy_and_hold_fills_at_open_not_close():
+    """next_open convention: entry price is day 1's OPEN. Regression guard for
+    a check that mistakenly used day 1's close (found in M3 real-data run)."""
+    open_, close = make_gapped_prices()
+    res = run_backtest(close, open_, sb.buy_and_hold(close.index, "AAA"))
+    by_open = close["AAA"].iloc[-1] / open_["AAA"].iloc[1]
+    by_close = close["AAA"].iloc[-1] / close["AAA"].iloc[1]
+    assert res.equity.iloc[-1] == pytest.approx(by_open, rel=1e-12)
+    # the two differ by that day's open->close move: the test is discriminating
+    assert abs(by_open / by_close - 1) > 1e-4
+
+
+def test_gapped_held_position_earns_close_to_close():
+    """Overnight and intraday legs must compose to exactly close_t/close_{t-1}."""
+    open_, close = make_gapped_prices()
+    res = run_backtest(close, open_, sb.buy_and_hold(close.index, "AAA"))
+    got = res.returns.iloc[3:]
+    want = close["AAA"].pct_change().iloc[3:]
+    assert float((got - want).abs().max()) < 1e-12
+
+
+def test_missing_price_on_held_position_is_warned_not_interpolated():
+    open_, close = make_gapped_prices(n=60)
+    close.iloc[30, 0] = np.nan
+    open_.iloc[30, 0] = np.nan
+    res = run_backtest(close, open_, sb.buy_and_hold(close.index, "AAA"))
+    assert any("price missing" in w for w in res.warnings)
+    assert res.returns.iloc[30] == pytest.approx(0.0, abs=1e-12)  # held flat
+    assert np.isfinite(res.equity).all()
+
+
 def test_costs_direction_and_magnitude():
     rng = np.random.default_rng(2)
     open_, close = make_prices({"AAA": rng.normal(0.0004, 0.01, 500),

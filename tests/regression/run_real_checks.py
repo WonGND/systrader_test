@@ -64,12 +64,17 @@ def main() -> int:
     print("\n[1] SPY Buy&Hold (dividends reinvested)")
     print("    " + fmt(s))
     print("    yearly:", {k: f"{v*100:.1f}%" for k, v in sorted(s["yearly_returns"].items())})
-    # internal consistency: engine path == raw adjusted-price ratio
-    px = close["SPY"].dropna()
-    ratio = float(px.iloc[-1] / px.loc[bh.equity.index[1]:].iloc[0])
+    # internal consistency: the signal fires on day 0 and fills at day 1's OPEN
+    # (next_open convention), so equity must equal close[-1] / open[day1].
+    entry = float(open_["SPY"].iloc[1])
+    ratio = float(close["SPY"].iloc[-1] / entry)
     drift = abs(bh.equity.iloc[-1] / ratio - 1)
-    print(f"    internal check vs price ratio: drift {drift:.2e} "
+    print(f"    internal check vs close[-1]/open[day1]: drift {drift:.2e} "
           f"({'OK' if drift < 1e-9 else 'FAIL'})")
+    stub = float(close['SPY'].iloc[1] / entry - 1)
+    print(f"    note: entry at {close.index[1].date()} open (next_open convention); "
+          f"that day's open->close was {stub:+.2%},")
+    print(f"          so figures differ from close-to-close published series by this 1-day stub.")
     print("    ==> 외부 대조: portfoliovisualizer.com에서 SPY 100%,")
     print(f"        {WINDOW_LABEL}, dividends reinvested 로 CAGR/MDD 비교")
 
