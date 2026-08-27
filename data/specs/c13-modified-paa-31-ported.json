@@ -1,0 +1,287 @@
+{
+ "spec_id": "c13-modified-paa-31-ported",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-31-Modified-PAA-model%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A0%88%EB%8C%80-%EC%88%98%EC%9D%B5-%EC%A0%84%EB%9E%B5-4",
+  "post_title": "실전 투자 전략 (31) - Modified PAA model을 이용한 절대 수익 전략 (4)",
+  "category": "column_strategy",
+  "published_at": "2017-02-05",
+  "archived_path": "data/archive/posts/실전-투자-전략-31-Modified-PAA-model을-이용한-절대-수익-전략-4.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 3,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "ported",
+  "track_reason": "원문 유니버스는 국내(국내 주식·국고채·엑셀 데이터)이나 로직(상대 모멘텀→절대 모멘텀→자산군 배분→수익곡선 모멘텀)은 자산군 독립적",
+  "port_note": "이식 설계(사용자 승인 2026-08-26): 위험자산은 원문 1단계 예시의 국가 지수만 채택 (S&P500→SPY, KOSPI200→SPY와 동일 클래스로 흡수, Nikkei225/Eurostoxx50→EFA), 10년 국고채→IEF, 3년 국고채(현금)→SHY — 전부 화이트리스트 매핑. 국내 섹터·팩터 종목군(19종 위험자산의 나머지)은 화이트리스트 밖이라 이식판에서 제외. 상대 모멘텀 '상위 6/19(≈30%)'는 축소 유니버스에서 비율 유지로 '상위 1/2' 적용(가정값, 리포트 명기). 원문 수치 재현은 불가하므로 M4 제외, 자체 인샘플 MDD를 판정 기준값으로 사용.",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": false
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "섹터·팩터 구성분 제외는 이식 설계로 사용자 승인(후보표 비고 명기)"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "Modified PAA (MPAA 2) — 이식판",
+   "source_quote": "실전 투자 전략 (31) - Modified PAA model을 이용한 절대 수익 전략 (4)",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "상대 모멘텀 → 절대 모멘텀(평균 모멘텀 스코어+현금 혼합) → 자산군 배분 → 수익곡선 모멘텀 순의 다층 절대수익 전략",
+   "source_quote": "* 순서 : 상대 모멘텀 --> 절대 모멘텀 --> 자산군 비중 배분 --> 수익 곡선 모멘텀",
+   "source_locator": "H1:변형된 MPAA 전략",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "asset_allocation",
+   "source_quote": "2 단계 : 1~12개월 평균 모멘텀 기준으로 상대 모멘텀 상위 종목 선정 (상대 모멘텀)",
+   "source_locator": "H1:변형된 MPAA 전략",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "원문: 국내 주식·국고채 / 이식: 미국 ETF",
+   "source_quote": "투자 그룹 : 위험자산군 - 19 종목 (주식, 팩터, 섹터 모두 하나로 통합)",
+   "source_locator": "H1:결과",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "KRX",
+   "source_quote": "안전 자산군 - 10년 만기 국고채",
+   "source_locator": "H1:결과",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": "위험 19종(국내 통합) 중 상대 모멘텀 상위 6개 + 안전(10년 국고채) + 현금(3년 국고채), 위험:안전 1:1",
+    "source_quote": "위험자산군 중 모멘텀 상위 6개 선정, MPAA 전략 1 (기존 방식), MPAA 전략 2 (새로운 방식) 적용",
+    "source_locator": "H1:결과",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "filters": {
+    "value": "위험:안전 자산군 배분 1:1",
+    "source_quote": "위험자산과 안전자산의 asset class 비중은 1:1 (보수적인 투자 모델)로 시뮬레이션",
+    "source_locator": "H1:결과",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [
+    {
+     "original_asset": "S&P500 (원문 1단계 유니버스 예시: 주식)",
+     "asset_class_key": "broad_equity_index",
+     "mapped_ticker": "SPY",
+     "mapping_source": "whitelist",
+     "rationale": "광의 주식지수 — 화이트리스트 broad_equity_index primary",
+     "approved_at": null
+    },
+    {
+     "original_asset": "KOSPI200 (원문 1단계 유니버스 예시: 주식)",
+     "asset_class_key": "broad_equity_index",
+     "mapped_ticker": "SPY",
+     "mapping_source": "whitelist",
+     "rationale": "광의 주식지수 클래스 — S&P500과 동일 클래스로 SPY에 흡수(중복 편입 방지)",
+     "approved_at": null
+    },
+    {
+     "original_asset": "Nikkei225, Eurostoxx50 (원문 1단계 유니버스 예시: 주식)",
+     "asset_class_key": "developed_ex_us_equity",
+     "mapped_ticker": "EFA",
+     "mapping_source": "whitelist",
+     "rationale": "미국 외 선진국 주식 — 화이트리스트 developed_ex_us_equity primary",
+     "approved_at": null
+    },
+    {
+     "original_asset": "10년 만기 국고채 (안전자산군)",
+     "asset_class_key": "intermediate_treasury",
+     "mapped_ticker": "IEF",
+     "mapping_source": "whitelist",
+     "rationale": "중기 국채(3~10년) — 화이트리스트 intermediate_treasury primary",
+     "approved_at": null
+    },
+    {
+     "original_asset": "3년 만기 국고채 (현금)",
+     "asset_class_key": "short_treasury_cash",
+     "mapped_ticker": "SHY",
+     "mapping_source": "whitelist",
+     "rationale": "단기 국채/현금등가물 — 화이트리스트 short_treasury_cash primary",
+     "approved_at": null
+    }
+   ],
+   "unmapped_assets": [
+    "국내 섹터·팩터 종목군 (위험 19종 중 국가 지수 외 구성분 — 화이트리스트 밖, 사용자 승인 하에 이식판 제외)",
+    "하이일드 채권, 금/원유/상품 index (1단계 예시 자산 — 최종 시뮬 미사용으로 이식판 미포함)"
+   ],
+   "resolved_tickers": [
+    "SPY",
+    "EFA",
+    "IEF",
+    "SHY"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "1~12개월 평균 모멘텀 상위 종목 선정(비율 30% 유지) 후 평균 모멘텀 스코어+현금 혼합",
+      "source_quote": "2 단계 : 1~12개월 평균 모멘텀 기준으로 상대 모멘텀 상위 종목 선정 (상대 모멘텀)",
+      "source_locator": "H1:변형된 MPAA 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "average momentum (1..12M), momentum score",
+      "source_quote": "3 단계 : 선정된 종목 대상으로 평균 모멘텀 스코어 + 현금 혼합 전략 적용 (절대 모멘텀)",
+      "source_locator": "H1:변형된 MPAA 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "1~12 months",
+      "source_quote": "2 단계 : 1~12개월 평균 모멘텀 기준으로 상대 모멘텀 상위 종목 선정 (상대 모멘텀)",
+      "source_locator": "H1:변형된 MPAA 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "최종 수익곡선에 6개월 수익곡선 모멘텀 적용(하락 시 현금화)",
+      "source_quote": "5 단계 : 4 단계 수익 곡선에 최종적으로 수익 곡선 모멘텀 적용 (6개월 수익곡선 모멘텀)",
+      "source_locator": "H1:변형된 MPAA 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "6 months (equity-curve momentum)",
+      "source_quote": "수익곡선 모멘텀 기간도 12개월이 아닌 6개월로 단축시켜 시뮬레이션",
+      "source_locator": "H1:코드 설명",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "체결 시점 미명시(월간 로직). 엔진 기본(익일 시가) 적용 승인?"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "momentum-score + cash mix, asset-class 1:1",
+    "source_quote": "위험자산과 안전자산의 asset class 비중은 1:1 (보수적인 투자 모델)로 시뮬레이션",
+    "source_locator": "H1:결과",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "평균 모멘텀 스코어에 반비례해 현금 혼합",
+    "source_quote": "3 단계 : 선정된 종목 대상으로 평균 모멘텀 스코어 + 현금 혼합 전략 적용 (절대 모멘텀)",
+    "source_locator": "H1:변형된 MPAA 전략",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "monthly",
+    "source_quote": "12개월 평균 모멘텀 스코어를 이용해서 4~5개 정도의 유니버스를 대상으로 리밸런싱을 시뮬레이션해보면, 한달 회전율은 15~ 20% 내외",
+    "source_locator": "관련 글(72) 서술",
+    "confidence": "low",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "월간 리밸런싱 시점(월말 여부) 원문 미명시. 월말 적용 승인?"
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "cagr": {
+   "value": "MPAA1 8% / MPAA2 9% (국내 원문 기준 — 이식판 재현 불가)",
+   "source_quote": "(ex : MPAA1 : CAGR 8% / MDD : -5% , MPAA 2 : CAGR 9% / MDD -6% )",
+   "source_locator": "H1:결론",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "mdd": {
+   "value": "MPAA1 -5% / MPAA2 -6% (국내 원문 기준)",
+   "source_quote": "(ex : MPAA1 : CAGR 8% / MDD : -5% , MPAA 2 : CAGR 9% / MDD -6% )",
+   "source_locator": "H1:결론",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": false,
+  "known_data_gaps": []
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.universe.selection_rule",
+   "question": "축소 유니버스에서 상대 모멘텀 상위 개수 — 원문 비율(6/19≈30%) 유지 시 상위 1",
+   "recommended_default": "top 1 of 2 risk assets (비율 유지)",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.rebalance.timing",
+   "question": "월말 리밸런싱 가정",
+   "recommended_default": "month-end",
+   "blocking": false
+  }
+ ]
+}

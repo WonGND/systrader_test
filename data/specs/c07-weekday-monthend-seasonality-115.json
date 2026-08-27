@@ -1,0 +1,255 @@
+{
+ "spec_id": "c07-weekday-monthend-seasonality-115",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-115-%EC%A3%BC%EC%A4%91-%EC%9B%94%EB%A7%90-%EA%B3%84%EC%A0%88%EC%84%B1%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A0%88%EB%8C%80-%EC%88%98%EC%9D%B5-%EC%A0%84%EB%9E%B5",
+  "post_title": "실전 투자 전략 (115) - 주중, 월말 계절성을 이용한 절대 수익 전략",
+  "category": "column_strategy",
+  "published_at": "2021-07-05",
+  "archived_path": "data/archive/posts/실전-투자-전략-115-주중-월말-계절성을-이용한-절대-수익-전략.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 8,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "SPY/TLT 대상 계절성 전략 — 원문이 미국 ETF 직접 대상",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "Q8 승인(2026-08-26): SPY·TLT 동시 보유 시 자금 배분 원문 미명시 → 50:50 가정값, 리포트에 가정 명기"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "주중, 월말 계절성을 이용한 절대 수익 전략",
+   "source_quote": "실전 투자 전략 (115) - 주중, 월말 계절성을 이용한 절대 수익 전략",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "주식(월말 효과+추세)과 채권(목요일 효과+단기 역추세)의 계절성 결합 단기 전략",
+   "source_quote": "주식 투자에 유리한 seasonality는 월말 효과를 이용했고, 그와 반대로 채권 투자에서는 주중 효과를 노렸습니다.",
+   "source_locator": "H2:로직",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "market_timing",
+   "source_quote": "이 동영상에서 소개하는 전략은 미국 주식과 장기 채권을 이용한 시즈널리티 전략입니다.",
+   "source_locator": "intro",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (SPY, TLT)",
+   "source_quote": "S&P500을 추종하는 SPY와 미국 20년 만기 국고채를 추종하는 TLT를 투자 대상으로 삼아 시즈널리티에 따라 투자한 결과입니다.",
+   "source_locator": "H2:전략",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "이 동영상에서 소개하는 전략은 미국 주식과 장기 채권을 이용한 시즈널리티 전략입니다.",
+   "source_locator": "intro",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": [
+     "SPY",
+     "TLT"
+    ],
+    "source_quote": "S&P500을 추종하는 SPY와 미국 20년 만기 국고채를 추종하는 TLT를 투자 대상으로 삼아 시즈널리티에 따라 투자한 결과입니다.",
+    "source_locator": "H2:전략",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "S&P500을 추종하는 SPY와 미국 20년 만기 국고채를 추종하는 TLT를 투자 대상으로 삼아 시즈널리티에 따라 투자한 결과입니다.",
+    "source_locator": "H2:전략",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "TLT"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "SPY: 월말 종가 > 200일 이평 → 월말 종가 매수",
+      "source_quote": "- SPY 매수  : 매월 마지막 종가 > 200 일 이평선 ----> 매월 마지막 거래일에 종가 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "SMA(200)",
+      "source_quote": "- SPY 매수  : 매월 마지막 종가 > 200 일 이평선 ----> 매월 마지막 거래일에 종가 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "200일",
+      "source_quote": "- SPY 매수  : 매월 마지막 종가 > 200 일 이평선 ----> 매월 마지막 거래일에 종가 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    },
+    {
+     "rule_text": {
+      "value": "TLT: 목요일 종가 < 5일 이평 → 목요일 종가 매수",
+      "source_quote": "- TLT 매수 : 매주 목요일 종가 < 5일 이평선 ------> 목요일 종가에 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "SMA(5)",
+      "source_quote": "- TLT 매수 : 매주 목요일 종가 < 5일 이평선 ------> 목요일 종가에 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "5일",
+      "source_quote": "- TLT 매수 : 매주 목요일 종가 < 5일 이평선 ------> 목요일 종가에 매수",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "당일 종가 > 전일 고가 → 종가 매도",
+      "source_quote": "- 매도 : 당일 종가 > 전일 고가 ----> 종가 매도",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "close vs prior high",
+      "source_quote": "- 매도 : 당일 종가 > 전일 고가 ----> 종가 매도",
+      "source_locator": "H2:로직",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": "당일 종가 체결 (원문 명시)",
+    "source_quote": "- 매도 : 당일 종가 > 전일 고가 ----> 종가 매도",
+    "source_locator": "H2:로직",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "SPY·TLT 동시 신호 시 50:50 분할 [가정값, Q8 사용자 승인 2026-08-26]",
+    "source_quote": null,
+    "source_locator": "Q8",
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "동시 보유 시 자금 배분 원문 미명시 → 50:50 가정 승인? [승인됨 2026-08-26]"
+   },
+   "cash_handling": {
+    "value": "무신호 구간 현금",
+    "source_quote": "주식 투자에 유리한 seasonality는 월말 효과를 이용했고, 그와 반대로 채권 투자에서는 주중 효과를 노렸습니다.",
+    "source_locator": "H2:로직",
+    "confidence": "low",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "event-driven (월말/목요일 진입, 조건 충족 시 청산)",
+    "source_quote": "- SPY 매수  : 매월 마지막 종가 > 200 일 이평선 ----> 매월 마지막 거래일에 종가 매수",
+    "source_locator": "H2:로직",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "종가 기준",
+    "source_quote": "- 매도 : 당일 종가 > 전일 고가 ----> 종가 매도",
+    "source_locator": "H2:로직",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "image_only",
+  "other_metrics": {
+   "value": null,
+   "source_quote": null,
+   "source_locator": null,
+   "confidence": "none",
+   "assumption_needed": true,
+   "question_for_user": "원문 수치 이미지 — M4는 정합성 확인 수준으로 승인?"
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": []
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.sizing.method",
+   "question": "동시 신호 시 배분 (Q8)",
+   "recommended_default": "50:50",
+   "blocking": false
+  }
+ ]
+}

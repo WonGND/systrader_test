@@ -83,3 +83,28 @@
 2. 확정 10개의 strategy_spec JSON 생성 (`data/specs/`) — 모든 값 필드에 source_quote + confidence
 3. 스키마 검증 통과 확인 → M2 게이트 종결 보고
 4. M3 (백테스트 엔진 + 회귀 테스트) 착수
+
+---
+
+## 6. M2 게이트 종결 보고 (2026-08-26 갱신)
+
+### 완료 항목
+- 사용자 확정: **C1~C9 + C13** (2026-08-26, "추천대로") + Q7·Q8 승인
+- 전략 스펙 JSON 10건 생성: `data/specs/c01-*.json` ~ `c13-*.json`
+
+### 검증 근거
+- **source_quote 181건 전부를 전달받은 원문 번들과 기계 대조** — 불일치 0
+  (원문의 NBSP 공백까지 원문 그대로 보존; 대조 실패 시 생성 자체가 중단되는 구조)
+- **JSON Schema(draft 2020-12) 검증: 10건 전부 0오류** — evidence 필수 필드,
+  null→assumption 규칙, ported→port_note 필수, mapping_source 제한 등 스키마 강제 조건 통과
+- Track A 9건 `m4_reproduction_eligible: true` / C13(ported) `false` + port_note 기록
+
+### 잔여 사항 (비차단)
+- `source.content_hash`가 `PENDING_LOCAL_INDEX` — 원문 해시는 로컬 인덱스에만 존재.
+  사용자 로컬에서 `python -m src.extractor.fill_spec_meta` 1회 실행 후 커밋으로 충전 (W10)
+- 각 스펙의 non-blocking open_questions(체결 시점 등)는 엔진 기본값(익일 시가)으로
+  진행하고 리포트에 "가정값"으로 표기 — CLAUDE.md §5 규약 그대로
+
+### 다음 단계
+M3: 백테스트 엔진 + 회귀 테스트 (CLAUDE.md §6 전 항목). 합성 데이터 검증(원격)과
+실데이터 대조(로컬 실행) 2단계로 분리 수행.

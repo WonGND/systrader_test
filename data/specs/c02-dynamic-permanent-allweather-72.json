@@ -1,0 +1,255 @@
+{
+ "spec_id": "c02-dynamic-permanent-allweather-72",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EB%8F%99%EC%A0%81-%EC%98%81%EA%B5%AC-%EC%98%AC%EC%9B%A8%EB%8D%94-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EC%A0%84%EB%9E%B5-72",
+  "post_title": "동적 영구 / 올웨더 포트폴리오 전략 (72)",
+  "category": "investing_basics",
+  "published_at": "2020-02-27",
+  "archived_path": "data/archive/posts/동적-영구-올웨더-포트폴리오-전략-72.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 5,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "원문이 SPY/TLT/GLD/AGG 및 SPY/IEF/TLT/GLD/DBC로 직접 백테스트",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "영구/올웨더 두 변형을 1스펙에 기록 — 기본 검증 대상은 영구(동적) 버전, 올웨더는 보조 변형"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "동적 영구 / 올웨더 포트폴리오 전략",
+   "source_quote": "동적 영구 / 올웨더 포트폴리오 전략 (72)",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "정적 배분 비중에 각 자산의 평균 모멘텀 스코어를 곱하고 잔여분을 현금으로 두는 동적 자산 배분",
+   "source_quote": "2) 각 자산의 평균 모멘텀 스코어를 구하여 1) 에서 구한 기본 배분 비중에 곱함",
+   "source_locator": "H1:동적 자산 배분 전략",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "asset_allocation",
+   "source_quote": "1) 매월 말 각 자산의 기본 배분 비중으로 배분",
+   "source_locator": "H1:동적 자산 배분 전략",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (equity, treasury, gold, aggregate bond, commodity)",
+   "source_quote": "주식(SPY) : 채권 (TLT) : 금 (GLD) : 현금 (AGG) = 25 : 25 : 25 : 25",
+   "source_locator": "H2:영구 포트폴리오",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "주식(SPY) : 채권 (TLT) : 금 (GLD) : 현금 (AGG) = 25 : 25 : 25 : 25",
+   "source_locator": "H2:영구 포트폴리오",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": {
+     "permanent": {
+      "SPY": 25,
+      "TLT": 25,
+      "GLD": 25,
+      "AGG": 25
+     },
+     "allweather": {
+      "SPY": 30,
+      "IEF": 15,
+      "TLT": 40,
+      "GLD": 7.5,
+      "DBC": 7.5
+     }
+    },
+    "source_quote": "주식(SPY) : 중기채권(IEF) : 장기채권(TLT) : 금(GLD) : 상품(DBC)",
+    "source_locator": "H2:올웨더 포트폴리오",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "filters": {
+    "value": "올웨더 배분비 30:15:40:7.5:7.5",
+    "source_quote": "= 30 : 15 : 40 : 7.5 : 7.5",
+    "source_locator": "H2:올웨더 포트폴리오",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "주식(SPY) : 채권 (TLT) : 금 (GLD) : 현금 (AGG) = 25 : 25 : 25 : 25",
+    "source_locator": "H2:영구 포트폴리오",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "TLT",
+    "GLD",
+    "AGG",
+    "IEF",
+    "DBC"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "기본 배분 비중 × 각 자산 평균 모멘텀 스코어",
+      "source_quote": "2) 각 자산의 평균 모멘텀 스코어를 구하여 1) 에서 구한 기본 배분 비중에 곱함",
+      "source_locator": "H1:동적 자산 배분 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "average momentum score",
+      "source_quote": "테스트에서 사용한 동적 자산 배분 전략은",
+      "source_locator": "H1:동적 자산 배분 전략",
+      "confidence": "medium",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "12M 평균 모멘텀 스코어 (원문 예시·관련 글 기준)",
+      "source_quote": "12개월 평균 모멘텀 스코어를 이용해서 4~5개 정도의 유니버스를 대상으로 리밸런싱을 시뮬레이션해보면, 한달 회전율은 15~ 20% 내외",
+      "source_locator": "H2:비용 논의",
+      "confidence": "medium",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "스코어 감소분만큼 비중 자동 축소, 미배분분은 현금 가산",
+      "source_quote": "3) 현금 비중 = 1 - 2) 에서 구한 각 자산의 비중의 총합",
+      "source_locator": "H1:동적 자산 배분 전략",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": "전월 말 신호 → 익일 마감 동시호가 종가 체결(원문이 슬리피지 제거 방법으로 명시)",
+    "source_quote": "이전달 마지막 거래일에서 발생한 신호를 기준으로 다음날 마감 동시호가에 종가로 매매한다면 슬리피지를 없앨 수 있습니다.",
+    "source_locator": "H2:비용 논의",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "static weights x momentum score; residual to cash",
+    "source_quote": "3) 현금 비중 = 1 - 2) 에서 구한 각 자산의 비중의 총합",
+    "source_locator": "H1:동적 자산 배분 전략",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "잔여 비중 전액 현금",
+    "source_quote": "4개의 비중 합은 60% 이기 때문에 40%가 남는 비중은 현금으로 대치 (현금 비중에 추가) 합니다.",
+    "source_locator": "H1:동적 자산 배분 전략",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "monthly",
+    "source_quote": "4) 매월 동일한 방법으로 리밸런싱",
+    "source_locator": "H1:동적 자산 배분 전략",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "month-end",
+    "source_quote": "1) 매월 말 각 자산의 기본 배분 비중으로 배분",
+    "source_locator": "H1:동적 자산 배분 전략",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "cagr": {
+   "value": "동적/정적 모두 7%대 초반",
+   "source_quote": "장기적인 CAGR (7% 대 초반) 은 큰 차이가 없고",
+   "source_locator": "H1:결과 분석",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "mdd": {
+   "value": "동적 -7%대 vs 정적 -13%대",
+   "source_quote": "동적 전략의 MDD는 -7% 대로, 정적 전략의 -13% 대의 절반 수준",
+   "source_locator": "H1:결과 분석",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "other_metrics": {
+   "value": "영구(동적) Sharpe 1.2201 / SPY 0.6158 / 정적 1.0665 (표)",
+   "source_quote": "Annualized Sharpe (Rf=0%) 1.22010000 0.615800 1.0665000",
+   "source_locator": "표:영구 포트폴리오",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": [
+   "DBC 상장 2006-02 — 올웨더 변형의 백테스트 시작일 제약"
+  ]
+ },
+ "open_questions": []
+}

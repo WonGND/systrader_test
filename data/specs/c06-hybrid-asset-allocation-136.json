@@ -1,0 +1,270 @@
+{
+ "spec_id": "c06-hybrid-asset-allocation-136",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-136-Hybrid-asset-allocation",
+  "post_title": "실전 투자 전략 (136) - Hybrid asset allocation",
+  "category": "column_strategy",
+  "published_at": "2023-04-05",
+  "archived_path": "data/archive/posts/실전-투자-전략-136-Hybrid-asset-allocation.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 12,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "Keller HAA — 미국 ETF 기반 동적 자산 배분. 방어(BIL/IEF)·카나리아(TIP)는 원문 명시",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "Q7 승인(2026-08-26): 공격형 8자산 목록은 원문에 없어 Keller 원논문 유니버스를 user_approved로 채움 — 원문 비인용 사실 명기"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "Hybrid asset allocation (HAA)",
+   "source_quote": "실전 투자 전략 (136) - Hybrid asset allocation",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "물가연동채(TIP) 카나리아 모멘텀으로 공격/방어를 전환하는 듀얼+카나리아 하이브리드 모멘텀",
+   "source_quote": "카나리아 자산(TIP)의 모멘텀이 0 이하일 경우, 방어형 자산 중 모멘텀이 높은 자산(BIL 또는 IEF)을 선택하고, 그렇지 않을 경우 공격형 자산 중 모멘텀이 높은 4개의 자산을 동일 비중으로 선택합니다.",
+   "source_locator": "H1:개요",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "momentum",
+   "source_quote": "전통적인 듀얼 모멘텀 방식과 카나리아 모멘텀 방식을 결합하여 하이브리드 모멘텀 방식을 적용합니다.",
+   "source_locator": "H1:개요",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US/global ETF (equity, bond, real estate, commodity)",
+   "source_quote": "이 전략은 8개의 공격형 자산, 2개의 방어형 자산, 그리고 1개의 카나리아 자산으로 구성되어 있는데요",
+   "source_locator": "H1:개요",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US/GLOBAL",
+   "source_quote": "이 전략은 8개의 공격형 자산, 2개의 방어형 자산, 그리고 1개의 카나리아 자산으로 구성되어 있는데요",
+   "source_locator": "H1:개요",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": {
+     "offensive_8_user_approved": [
+      "SPY",
+      "IWM",
+      "EFA",
+      "EEM",
+      "VNQ",
+      "DBC",
+      "IEF",
+      "TLT"
+     ],
+     "defensive": [
+      "BIL",
+      "IEF"
+     ],
+     "canary": [
+      "TIP"
+     ]
+    },
+    "source_quote": null,
+    "source_locator": "Q7",
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "공격형 8자산 목록이 원문에 없음 → Keller 원논문(HAA) 표준 유니버스로 채움. [승인됨 2026-08-26]"
+   },
+   "position_count": {
+    "value": 4,
+    "source_quote": "그렇지 않을 경우 공격형 자산 중 모멘텀이 높은 4개의 자산을 동일 비중으로 선택합니다",
+    "source_locator": "H1:개요",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "물가 연동채 ETF인 TIPS의 모멘텀을 이용하여 주식과 채권의 동반 하락 구간을 판별하고 있습니다.",
+    "source_locator": "H1:개요",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "IWM",
+    "EFA",
+    "EEM",
+    "VNQ",
+    "DBC",
+    "IEF",
+    "TLT",
+    "BIL",
+    "TIP"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "TIP 모멘텀>0이면 공격형 상위 4 동일비중, ≤0이면 방어형(BIL/IEF) 중 상위 1",
+      "source_quote": "카나리아 자산(TIP)의 모멘텀이 0 이하일 경우, 방어형 자산 중 모멘텀이 높은 자산(BIL 또는 IEF)을 선택하고, 그렇지 않을 경우 공격형 자산 중 모멘텀이 높은 4개의 자산을 동일 비중으로 선택합니다.",
+      "source_locator": "H1:개요",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "1/3/6/12M average momentum score",
+      "source_quote": "투자 자산의 선택은 각 자산의 1, 3, 6, 12 개월 평균 모멘텀 스코어를 이용하여 강한 종목을 선정하는 방식입니다.",
+      "source_locator": "H1:개요",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "1,3,6,12 months",
+      "source_quote": "투자 자산의 선택은 각 자산의 1, 3, 6, 12 개월 평균 모멘텀 스코어를 이용하여 강한 종목을 선정하는 방식입니다.",
+      "source_locator": "H1:개요",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 0,
+      "source_quote": "카나리아 자산(TIP)의 모멘텀이 0 이하일 경우, 방어형 자산 중 모멘텀이 높은 자산(BIL 또는 IEF)을 선택하고, 그렇지 않을 경우 공격형 자산 중 모멘텀이 높은 4개의 자산을 동일 비중으로 선택합니다.",
+      "source_locator": "H1:개요",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "선택된 공격형 자산의 모멘텀 ≤0이면 그 슬롯을 방어형 상위 자산으로 대체",
+      "source_quote": "이때 선택된 공격형 자산의 모멘텀이 0 이하일 경우, 해당 자산을 방어형 자산 중 모멘텀이 높은 자산으로 대체합니다.",
+      "source_locator": "H1:개요",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "체결 시점 미명시. 엔진 기본(익일 시가) 적용 승인?"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "equal_weight (top4)",
+    "source_quote": "그렇지 않을 경우 공격형 자산 중 모멘텀이 높은 4개의 자산을 동일 비중으로 선택합니다",
+    "source_locator": "H1:개요",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "방어 시 BIL(현금성) 또는 IEF",
+    "source_quote": "안전자산은 중기채 또는 현금이 포함되어 있고, 중기채권이 마이너스 모멘텀이면 현금으로 대체하게 됩니다.",
+    "source_locator": "H1:개요",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "monthly",
+    "source_quote": "이 전략은 매월 마지막 거래일에 리밸런싱을 합니다.",
+    "source_locator": "H1:개요",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "last trading day of month",
+    "source_quote": "이 전략은 매월 마지막 거래일에 리밸런싱을 합니다.",
+    "source_locator": "H1:개요",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "cagr": {
+   "value": 0.15,
+   "source_quote": "아주 단순한 전략임에도 불구하고 연 복리 15%, MDD -10% 대로 상당히 우수한 퍼포먼스를 보여줍니다.",
+   "source_locator": "H1:개요",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "mdd": {
+   "value": "-10%대",
+   "source_quote": "아주 단순한 전략임에도 불구하고 연 복리 15%, MDD -10% 대로 상당히 우수한 퍼포먼스를 보여줍니다.",
+   "source_locator": "H1:개요",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": [
+   "BIL 상장 2007-05, DBC 2006-02 — 인샘플 시작일 제약"
+  ]
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.universe.selection_rule",
+   "question": "공격형 8자산 원문 비인용 — Keller 원논문 유니버스 사용 (Q7)",
+   "recommended_default": "SPY,IWM,EFA,EEM,VNQ,DBC,IEF,TLT",
+   "blocking": false
+  }
+ ]
+}

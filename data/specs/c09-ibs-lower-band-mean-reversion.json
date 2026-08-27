@@ -1,0 +1,253 @@
+{
+ "spec_id": "c09-ibs-lower-band-mean-reversion",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EA%B3%BC%EC%B5%9C%EC%A0%81%ED%99%94%EB%A5%BC-%ED%94%BC%ED%95%98%EB%8A%94-CAGR-26-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+  "post_title": "과최적화를 피하는 CAGR 26% 역추세 전략",
+  "category": "column_strategy",
+  "published_at": "2024-10-25",
+  "archived_path": "data/archive/posts/과최적화를-피하는-CAGR-26-역추세-전략.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 10,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "SPY/QQQ 단일 ETF 원판만 채택. 개별주 확장판(S&P500 구성종목)은 point-in-time 구성 데이터 부재로 생존편향 제거 불가 → 제외(원문도 경고). 발행 2024-10 → OOS 오염 리포트 명기",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "단일 ETF 원판 한정 — 개별주 확장판 제외 사유를 리포트에 명기"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "IBS·하한선 역추세 전략 (원판)",
+   "source_quote": "과최적화를 피하는 CAGR 26% 역추세 전략",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "25일 고저폭 이동평균 기반 하한선과 IBS 과매도 결합 단기 평균회귀",
+   "source_quote": "지난 25일 동안의 고가에서 저가를 뺀 값의 이동 평균을 계산합니다.",
+   "source_locator": "H2:규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "mean_reversion",
+   "source_quote": "IBS 지표를 계산합니다: (종가 - 저가) / (고가 - 저가)",
+   "source_locator": "H2:규칙",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (SPY/QQQ 단일)",
+   "source_quote": "SPY가 하한선(3번 항목) 아래로 종가를 기록하고 IBS가 0.3 미만일 때 매수합니다.",
+   "source_locator": "H2:규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "SPY가 하한선(3번 항목) 아래로 종가를 기록하고 IBS가 0.3 미만일 때 매수합니다.",
+   "source_locator": "H2:규칙",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": [
+     "SPY",
+     "QQQ"
+    ],
+    "source_quote": "QQQ에 적용된 전략의 파라미터를 변경하며 1,875개의 실험을 실행하여 파라미터 공간을 탐색합니다.",
+    "source_locator": "H2:연구 계획",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "SPY가 하한선(3번 항목) 아래로 종가를 기록하고 IBS가 0.3 미만일 때 매수합니다.",
+    "source_locator": "H2:규칙",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "QQQ"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "종가 < 하한선(10일 고가 MA - 2.5×25일 (고가-저가) MA) AND IBS < 0.3 → 매수",
+      "source_quote": "하한선을 계산합니다: 지난 10일 동안의 고가 이동 평균에서 2.5 x (첫 번째 항목의 고가-저가 이동 평균)을 뺀 값",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "IBS = (종가-저가)/(고가-저가)",
+      "source_quote": "IBS 지표를 계산합니다: (종가 - 저가) / (고가 - 저가)",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "25일(range MA) / 10일(고가 MA)",
+      "source_quote": "지난 25일 동안의 고가에서 저가를 뺀 값의 이동 평균을 계산합니다.",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": "IBS < 0.3, 하한선 계수 2.5",
+      "source_quote": "SPY가 하한선(3번 항목) 아래로 종가를 기록하고 IBS가 0.3 미만일 때 매수합니다.",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "종가 > 전일 고가 → 청산",
+      "source_quote": "SPY 종가가 어제 고가보다 높아지면 거래를 종료합니다.",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    },
+    {
+     "rule_text": {
+      "value": "가격 < 300일 이평선 → 청산",
+      "source_quote": "또한 가격이 300일 이동 평균선 아래로 떨어지면 거래를 종료합니다.",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "300일",
+      "source_quote": "또한 가격이 300일 이동 평균선 아래로 떨어지면 거래를 종료합니다.",
+      "source_locator": "H2:규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원판 체결 시점 미명시(개별주 확장판은 '다음 시가' 명시). 익일 시가 적용 승인? (권장: 익일 시가 — 확장판 서술과 일관)"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원판 포지션 크기 미명시 — 100% 단일 포지션 가정 승인? (권장: 100%)"
+   },
+   "cash_handling": {
+    "value": "무포지션 구간 현금 (원판 노출 22% 서술)",
+    "source_quote": "노출 시간은 99% 이상으로, 단일 종목의 22%와 극명한 대조를 이룹니다.",
+    "source_locator": "H2:다중 자산 결과",
+    "confidence": "low",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "daily signal check",
+    "source_quote": "SPY 종가가 어제 고가보다 높아지면 거래를 종료합니다.",
+    "source_locator": "H2:규칙",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "일간 점검 외 미명시. 일간 처리 승인?"
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "other_metrics": {
+   "value": "원판 QQQ Sharpe 2.11 주장(민감도 분석 기대치 1.95-1.99), 1875 실험 평균 연 11.8%",
+   "source_quote": "1,875개 실험의 평균 연간 수익률은 11.8%에 불과합니다.",
+   "source_locator": "H2:민감도 분석",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": []
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.signals.signal_to_execution_lag",
+   "question": "체결 시점 — 익일 시가 권장",
+   "recommended_default": "next_open",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.sizing.method",
+   "question": "포지션 100% 가정",
+   "recommended_default": "100%",
+   "blocking": false
+  }
+ ]
+}

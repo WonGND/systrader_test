@@ -1,0 +1,255 @@
+{
+ "spec_id": "c01-avg-momentum-score-allocation-14-17",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-14-%EC%9E%90%EC%82%B0%EA%B5%B0-%EB%B9%84%EC%A4%91-%EB%B0%B0%EB%B6%84-X-%ED%8F%89%EA%B7%A0-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%8A%A4%EC%BD%94%EC%96%B4-%EB%B0%B0%EB%B6%84",
+  "post_title": "실전 투자 전략 (14) - 자산군 비중 배분 X 평균 모멘텀 스코어 배분",
+  "category": "column_strategy",
+  "published_at": "2014-05-07",
+  "archived_path": "data/archive/posts/실전-투자-전략-14-자산군-비중-배분-X-평균-모멘텀-스코어-배분.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 4,
+  "text_only_reproducible": true,
+  "related_posts": [
+   "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-17-%EC%9E%90%EC%82%B0%EA%B5%B0-%EB%B9%84%EC%A4%91-%EB%B0%B0%EB%B6%84-X-%ED%8F%89%EA%B7%A0-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%8A%A4%EC%BD%94%EC%96%B4-%EB%B0%B0%EB%B6%84-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%BD%94%EB%93%9C"
+  ]
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "원문이 해외 ETF(SPY/EFA/EEM/IEF/TLT/SHY)로 직접 시뮬레이션. (17)은 동일 전략의 파이썬 코드판 — duplicate_or_continuation으로 병합",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "(14)+(17) 병합 1스펙 — 사용자 승인"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "자산군 비중 배분 X 평균 모멘텀 스코어 배분",
+   "source_quote": "실전 투자 전략 (14) - 자산군 비중 배분 X 평균 모멘텀 스코어 배분",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "자산군(주식/채권/현금) 간 균형 배분 위에 종목별 12개월 평균 모멘텀 스코어로 비중을 곱해 매월 리밸런싱",
+   "source_quote": "각 자산군에 속하는 종목의 개수가 다를 때 자산군의 최종 배분비를 균형 있게 유지하는 방법을 시뮬레이션",
+   "source_locator": "intro",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "asset_allocation",
+   "source_quote": "각 종목별 배분 비율 = 자산군간 배분비 / 해당 자산군 종목 개수 X 1~12개월 평균 모멘텀 비중 스코어",
+   "source_locator": "H2:포트폴리오 투자 방법",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US/global ETF (equity, treasury, cash)",
+   "source_quote": "주식군 (3종목) : 미국 주식 (SPY), 선진국 주식(EFA), 이머징마켓 주식(EEM)",
+   "source_locator": "H1:투자 유니버스",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "장기 데이터 부족으로 어쩔 수 없이 track record가 축적된 해외 ETF로 시뮬레이션 합니다.",
+   "source_locator": "intro",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": [
+     "SPY",
+     "EFA",
+     "EEM",
+     "IEF",
+     "TLT",
+     "SHY"
+    ],
+    "source_quote": "채권군 (2종목) : 미국 10년 국채(IEF), 미국 20년 국채 (TLT)",
+    "source_locator": "H1:투자 유니버스",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "position_count": {
+    "value": 6,
+    "source_quote": "현금 (1종목) : 미국 단기 국채 (SHY)",
+    "source_locator": "H1:투자 유니버스",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "장기 데이터 부족으로 어쩔 수 없이 track record가 축적된 해외 ETF로 시뮬레이션 합니다.",
+    "source_locator": "intro",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작(결측 기록) 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "EFA",
+    "EEM",
+    "IEF",
+    "TLT",
+    "SHY"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "종목별 배분비 = (자산군 배분비 1:1:1 / 자산군 내 종목 수) × 1~12개월 평균 모멘텀 스코어",
+      "source_quote": "주식 : 채권 : 현금 = 1 : 1 : 1",
+      "source_locator": "H2:포트폴리오 투자 방법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "average momentum score (1..12M)",
+      "source_quote": "각 종목별 배분 비율 = 자산군간 배분비 / 해당 자산군 종목 개수 X 1~12개월 평균 모멘텀 비중 스코어",
+      "source_locator": "H2:포트폴리오 투자 방법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "1~12 months",
+      "source_quote": "각 종목별 배분 비율 = 자산군간 배분비 / 해당 자산군 종목 개수 X 1~12개월 평균 모멘텀 비중 스코어",
+      "source_locator": "H2:포트폴리오 투자 방법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "모멘텀 스코어 하락 시 해당 비중이 자동 축소(스코어 비례 배분의 역방향) — 별도 청산 규칙 없음",
+      "source_quote": "매월말 상기 투자 비중으로 리밸런싱",
+      "source_locator": "H2:포트폴리오 투자 방법",
+      "confidence": "medium",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 미명시. 엔진 기본값(익일 시가) 적용 승인? ((17) 코드는 월말지수 종가 기준 계산)"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "asset-class equal split x momentum-score weighting",
+    "source_quote": "각 종목별 배분 비율 = 자산군간 배분비 / 해당 자산군 종목 개수 X 1~12개월 평균 모멘텀 비중 스코어",
+    "source_locator": "H2:포트폴리오 투자 방법",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "현금(SHY)이 유니버스 내 자산군으로 상시 포함",
+    "source_quote": "현금 (1종목) : 미국 단기 국채 (SHY)",
+    "source_locator": "H1:투자 유니버스",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "monthly",
+    "source_quote": "매월말 상기 투자 비중으로 리밸런싱",
+    "source_locator": "H2:포트폴리오 투자 방법",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "month-end",
+    "source_quote": "매월말 상기 투자 비중으로 리밸런싱",
+    "source_locator": "H2:포트폴리오 투자 방법",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "cagr": {
+   "value": 0.09,
+   "source_quote": "CAGR : 9%, MDD :-8.52%",
+   "source_locator": "H2:주식:채권만으로 구성된 모멘텀 포트폴리오",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "mdd": {
+   "value": -0.0852,
+   "source_quote": "CAGR : 9%, MDD :-8.52%",
+   "source_locator": "H2:주식:채권만으로 구성된 모멘텀 포트폴리오",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "other_metrics": {
+   "value": "수치는 주식+채권(현금 제외) 구성 기준. 기본형 MDD는 '-4% 선에서 유지' 서술",
+   "source_quote": "MDD를 -4% 선에서 유지",
+   "source_locator": "H2:결과",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": []
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.signals.signal_to_execution_lag",
+   "question": "체결 시점 원문 미명시 — 엔진 기본(익일 시가)으로 진행?",
+   "recommended_default": "next_open",
+   "blocking": false
+  }
+ ]
+}

@@ -1,0 +1,281 @@
+{
+ "spec_id": "c08-qqq-tlt-spread-rsi3",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EB%82%98%EC%8A%A4%EB%8B%A5%EA%B3%BC-%EA%B5%AD%EC%B1%84-%EC%8A%A4%ED%94%84%EB%A0%88%EB%93%9C%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+  "post_title": "나스닥과 국채 스프레드를 이용한 역추세 전략",
+  "category": "column_strategy",
+  "published_at": "2024-10-21",
+  "archived_path": "data/archive/posts/나스닥과-국채-스프레드를-이용한-역추세-전략.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 9,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "QQQ/TLT 스프레드 — 미국 ETF 직접 대상. 레버리지 개선판(QLD/UBT)은 화이트리스트 금지군이라 원판만 채택. 발행 2024-10 → OOS 구간이 저자에게 인샘플이었음을 리포트에 명기",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')",
+   "원판(QQQ/TLT, 무레버리지)만 채택 — 레버리지판 제외"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "나스닥과 국채 스프레드를 이용한 역추세 전략",
+   "source_quote": "나스닥과 국채 스프레드를 이용한 역추세 전략",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "QQQ/TLT 가격 비율의 3일 RSI 과매수/과매도로 두 자산을 오가는 역추세 전략",
+   "source_quote": "QQQ(나스닥-100 지수 추적)와 TLT(장기 미국 국채 성과 추적)의 가격 비율로 스프레드 계산",
+   "source_locator": "H2:원래 전략 규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "mean_reversion",
+   "source_quote": "스프레드의 3일 RSI 계산하여 과매수/과매도 신호 추적",
+   "source_locator": "H2:원래 전략 규칙",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (QQQ, TLT)",
+   "source_quote": "QQQ(나스닥-100 지수 추적)와 TLT(장기 미국 국채 성과 추적)의 가격 비율로 스프레드 계산",
+   "source_locator": "H2:원래 전략 규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "QQQ(나스닥-100 지수 추적)와 TLT(장기 미국 국채 성과 추적)의 가격 비율로 스프레드 계산",
+   "source_locator": "H2:원래 전략 규칙",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": [
+     "QQQ",
+     "TLT"
+    ],
+    "source_quote": "QQQ(나스닥-100 지수 추적)와 TLT(장기 미국 국채 성과 추적)의 가격 비율로 스프레드 계산",
+    "source_locator": "H2:원래 전략 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "QQQ(나스닥-100 지수 추적)와 TLT(장기 미국 국채 성과 추적)의 가격 비율로 스프레드 계산",
+    "source_locator": "H2:원래 전략 규칙",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "QQQ",
+    "TLT"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "스프레드 RSI(3) < 15 → QQQ 매수",
+      "source_quote": "스프레드 3일 RSI < 15: QQQ 매수",
+      "source_locator": "H2:진입 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "RSI(3) of QQQ/TLT ratio",
+      "source_quote": "스프레드의 3일 RSI 계산하여 과매수/과매도 신호 추적",
+      "source_locator": "H2:원래 전략 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "3일",
+      "source_quote": "스프레드의 3일 RSI 계산하여 과매수/과매도 신호 추적",
+      "source_locator": "H2:원래 전략 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 15,
+      "source_quote": "스프레드 3일 RSI < 15: QQQ 매수",
+      "source_locator": "H2:진입 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    },
+    {
+     "rule_text": {
+      "value": "스프레드 RSI(3) > 85 → TLT 매수",
+      "source_quote": "스프레드 3일 RSI > 85: TLT 매수",
+      "source_locator": "H2:진입 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 85,
+      "source_quote": "스프레드 3일 RSI > 85: TLT 매수",
+      "source_locator": "H2:진입 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "스프레드 RSI(3) > 70 → QQQ 청산",
+      "source_quote": "스프레드 3일 RSI > 70: QQQ 청산",
+      "source_locator": "H2:청산 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 70,
+      "source_quote": "스프레드 3일 RSI > 70: QQQ 청산",
+      "source_locator": "H2:청산 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    },
+    {
+     "rule_text": {
+      "value": "스프레드 RSI(3) < 30 → TLT 청산",
+      "source_quote": "스프레드 3일 RSI < 30: TLT 청산",
+      "source_locator": "H2:청산 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 30,
+      "source_quote": "스프레드 3일 RSI < 30: TLT 청산",
+      "source_locator": "H2:청산 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "체결 시점 미명시. 엔진 기본(익일 시가) 적용 승인?"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "포지션 크기 원문 미명시 — 신호 자산 100% 가정 승인? (권장: 100%)"
+   },
+   "cash_handling": {
+    "value": "무신호 구간 현금 (노출 시간 63% 서술은 개선판 기준)",
+    "source_quote": "노출 조정 수익률: 35.3% (63% 투자 시간 고려)",
+    "source_locator": "H2:개선된 전략 결과",
+    "confidence": "low",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "daily signal check",
+    "source_quote": "스프레드의 3일 RSI 계산하여 과매수/과매도 신호 추적",
+    "source_locator": "H2:원래 전략 규칙",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "일간 점검 외 미명시. 일간 처리 승인?"
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "cagr": {
+   "value": 0.105,
+   "source_quote": "연간 수익률: 10.5% (Buy&Hold 15.2% 대비)",
+   "source_locator": "H2:초기 실험 결과",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "other_metrics": {
+   "value": "Sharpe 0.88 (원판)",
+   "source_quote": "샤프 비율: 0.88",
+   "source_locator": "H2:초기 실험 결과",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": []
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.sizing.method",
+   "question": "신호 자산 100% 투입 가정",
+   "recommended_default": "100%",
+   "blocking": false
+  }
+ ]
+}

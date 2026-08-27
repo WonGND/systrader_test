@@ -1,0 +1,231 @@
+{
+ "spec_id": "c04-rsi2-counter-trend-39",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/%EC%8B%A4%EC%A0%84-%ED%88%AC%EC%9E%90-%EC%A0%84%EB%9E%B5-39-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5-RSI2-system",
+  "post_title": "실전 투자 전략 (39) - 역추세 전략, RSI(2) system",
+  "category": "column_strategy",
+  "published_at": "2017-04-04",
+  "archived_path": "data/archive/posts/실전-투자-전략-39-역추세-전략-RSI2-system.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 5,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "원문 시뮬레이션 코드가 미국 ETF 7종 주식군 대상",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-26 사용자 승인 (M2 확정, '추천대로')"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": true
+ },
+ "strategy": {
+  "name": {
+   "value": "역추세 전략, RSI(2) system",
+   "source_quote": "실전 투자 전략 (39) - 역추세 전략, RSI(2) system",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "장기 상승 추세 + 단기 급락 시 매수, 단기 반전 확인 시 매도하는 역추세 단기 전략",
+   "source_quote": "매수 조건 : 가격 > 200일 이평선 + 가격 < 5일 이평선 + RSI(2) < 5",
+   "source_locator": "H2:대표 기법",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "mean_reversion",
+   "source_quote": "매도 조건 : 가격 > 5일 이평선",
+   "source_locator": "H2:대표 기법",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US/intl equity ETF",
+   "source_quote": "주식리스트 = ['SPY', 'EFA', 'IWD', 'IWF', 'IJH', 'IWM', 'EWJ']",
+   "source_locator": "code",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "주식리스트 = ['SPY', 'EFA', 'IWD', 'IWF', 'IJH', 'IWM', 'EWJ']",
+   "source_locator": "code",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": [
+     "SPY",
+     "EFA",
+     "IWD",
+     "IWF",
+     "IJH",
+     "IWM",
+     "EWJ"
+    ],
+    "source_quote": "주식리스트 = ['SPY', 'EFA', 'IWD', 'IWF', 'IJH', 'IWM', 'EWJ']",
+    "source_locator": "code",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "includes_etf": {
+    "value": true,
+    "source_quote": "주식리스트 = ['SPY', 'EFA', 'IWD', 'IWF', 'IJH', 'IWM', 'EWJ']",
+    "source_locator": "code",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "EFA",
+    "IWD",
+    "IWF",
+    "IJH",
+    "IWM",
+    "EWJ"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "가격>장기 이평(90/120/150/180/200 5단계 분산) AND 가격<5일 이평 AND RSI(2)<임계",
+      "source_quote": "과최적화를 방지하기 위해 장기 추세 기간값을 널찍널찍하게 5단계(90일, 120일, 150일, 180일, 200일)로 분산시키고, RSI(2) 값의 역치도 20 정도로 늘려 신호를 많이 잡아서 시뮬레이션",
+      "source_locator": "H2:시뮬레이션 결과",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "RSI(2), SMA(5), SMA(90..200)",
+      "source_quote": "매수 조건 : 가격 > 200일 이평선 + 가격 < 5일 이평선 + RSI(2) < 5",
+      "source_locator": "H2:대표 기법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "RSI 2일 / 단기 5일 / 장기 90~200일 5단계",
+      "source_quote": "매수 조건 : 가격 > 200일 이평선 + 가격 < 5일 이평선 + RSI(2) < 5",
+      "source_locator": "H2:대표 기법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": "RSI(2) < 5 (원판) 또는 < 20 (완화판, 원문 시뮬레이션)",
+      "source_quote": "RSI(2)의 제한값을 5가 아니라 10이나 20 정도로 더 완화시켜 매매 신호를 더 많이 잡으려는 시도",
+      "source_locator": "H2:시뮬레이션 결과",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "가격이 5일 이평선 상회 시 매도",
+      "source_quote": "매도 조건 : 가격 > 5일 이평선",
+      "source_locator": "H2:대표 기법",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": "원문 코드상 전일 신호 → 당일 종가-종가 수익 반영",
+    "source_quote": "a[i+'수익'] = np.where(a[i+'최종포지션'].shift(1) == 1, a[i]/a[i].shift(1),1).cumprod()",
+    "source_locator": "code",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "종목·타임프레임 균등 분산(코드: 5개 기간값 전략 평균)",
+    "source_quote": "def 다중RSI전략(데이터, 주기1, 주기2, 주기3, 주기4, 주기5, RSI값):",
+    "source_locator": "code",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "무신호 구간 현금(수익률 1 유지)",
+    "source_quote": "a[i+'수익'] = np.where(a[i+'최종포지션'].shift(1) == 1, a[i]/a[i].shift(1),1).cumprod()",
+    "source_locator": "code",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "daily signal check",
+    "source_quote": "매도 조건 : 가격 > 5일 이평선",
+    "source_locator": "H2:대표 기법",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "일간 신호 점검 외 리밸런싱 시점 미명시. 코드 방식(일간) 적용 승인?"
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "image_only",
+  "other_metrics": {
+   "value": "승률 70%+ 서술만 텍스트",
+   "source_quote": "단기 역추세 시스템은 추세 추종 시스템과 달리 승률이 70%가 넘어 심리적으로 안정될 뿐만 아니라",
+   "source_locator": "H2:시뮬레이션 결과",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": []
+ },
+ "open_questions": []
+}
