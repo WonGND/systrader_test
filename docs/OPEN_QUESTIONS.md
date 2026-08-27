@@ -45,8 +45,14 @@
 | W9 | resolved | **10개 확정(2026-08-26)**: C1~C9 + C13 ("추천대로") |
 | Q7 | resolved | HAA 유니버스 Keller 원논문으로 충전 — 승인(2026-08-26), 스펙에 원문 비인용 명기 |
 | Q8 | resolved | 계절성 동시 신호 50:50 가정 — 승인(2026-08-26) |
-| W10 | blocking | 사용자 로컬에서 `python -m src.extractor.fill_spec_meta` 실행 → content_hash 충전 커밋·푸시 (M3 착수와 병행 가능, non-urgent) |
-| W11 | blocking | **M2 게이트 종결 승인 대기** (`reports/M2_candidate_selection.md` §6 종결 보고) |
+| W10 | resolved | content_hash 10/10 충전 완료(2026-08-26, 사용자 실행·푸시, 원격 재검증 통과) |
+| W11 | resolved | **M2 게이트 승인 종결(2026-08-26)** — "게이트 종결 후 M3으로 가자" |
+
+## M3 — 백테스트 엔진 / 회귀 테스트
+
+| # | 상태 | 질문 | 확정/권장안 |
+|---|---|---|---|
+| (진행 중 발생 시 기록) | | | |
 
 ---
 
