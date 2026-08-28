@@ -1,6 +1,11 @@
 # STATE
 
-- 현재 마일스톤: **M3 — 백테스트 엔진 + 회귀 테스트 (진행 중)**
+- 현재 마일스톤: **M4 — Track A 인샘플 재현 (진행 중)**
+- M3: **2026-08-26 승인 종결** ("M3 승인할게"). 보고서: `reports/M3_engine_regression.md`
+- M4 구현 완료, 실행 대기: Track A 9개(변형 포함 11런) 전략 구현 + 오프라인 검증 22건 통과
+  - 대상: C1, C2(영구/올웨더), C3, C4, C5, C6, C7, C8, C9(SPY/QQQ). **C13(ported)은 M4 제외**
+  - 엔진 내부 루프 numpy 재작성 — 슬리브 런 47배 가속(9.4s→0.20s), 회귀 18건 동작 불변 확인
+  - 다음 액션: 사용자 로컬 `python -m src.validate.run_m4 --json reports/m4_results.json`
 - M2: **2026-08-26 승인 종결.** 스펙 10건(`data/specs/c*.json`) 확정, 인용 181건 기계 대조,
   스키마 0오류, content_hash 10/10 충전. 보고서: `reports/M2_candidate_selection.md`
 - M3 계획: ① 엔진+합성 회귀(원격) ② 실데이터 대조(SPY B&H·60/40, 로컬 실행) — 전부 통과 전

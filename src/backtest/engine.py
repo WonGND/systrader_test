@@ -9,13 +9,17 @@ Design constraints (CLAUDE.md §5):
 - Costs (commission + one-way slippage) are charged on traded notional and come
   from config/backtest_defaults.yaml via settings.py — never hardcoded.
 - Missing prices are never interpolated. A target on a ticker with no price at
-  execution is dropped to cash and the gap is recorded in `warnings`.
+  execution is dropped to cash, and a held position whose price goes missing is
+  carried flat; both cases are recorded in `warnings`.
 
 The engine holds currency positions and walks day by day:
   prev close -> today's open (overnight, old weights)
   [execute pending rebalance at open]
   open -> close (intraday, new weights)
   [execute same-day-close rebalance if execution="close"]
+
+The inner loop runs on numpy arrays: with 75-sleeve strategies the pandas
+version took ~9s per run, which made the M4 batch impractical.
 """
 
 from __future__ import annotations
@@ -68,90 +72,118 @@ def run_backtest(close: pd.DataFrame, open_: pd.DataFrame, targets: pd.DataFrame
     bad = [c for c in targets.columns if c not in close.columns]
     if bad:
         raise ValueError(f"targets reference unknown tickers: {bad}")
-    if ((targets.fillna(0).sum(axis=1) > 1 + 1e-9) | (targets.fillna(0) < -1e-12).any(axis=1)).any():
+    if targets.index.has_duplicates:
+        raise ValueError("targets index has duplicate signal dates")
+    filled = targets.fillna(0.0)
+    if ((filled.sum(axis=1) > 1 + 1e-9) | (filled < -1e-12).any(axis=1)).any():
         raise ValueError("weights must be >=0 and sum to <=1 (long-only, cash remainder)")
 
     dates = close.index
     cols = list(close.columns)
+    k = len(cols)
     rate = commission + slippage
 
-    cash = initial
-    hold = pd.Series(0.0, index=cols)     # currency value per ticker
-    pending = None                        # target scheduled for next open
+    O = open_.to_numpy(dtype=float)
+    C = close.to_numpy(dtype=float)
+
+    # map each signal date to its row position; drop targets outside the window
+    pos_of = {d: i for i, d in enumerate(dates)}
+    plan: dict = {}
+    for d, row in filled.reindex(columns=cols).fillna(0.0).iterrows():
+        if d in pos_of:
+            plan[pos_of[d]] = row.to_numpy(dtype=float)
+
+    cash = float(initial)
+    hold = np.zeros(k)
+    pending = None
     warnings: list = []
 
-    eq, tos, wts = [], [], []
+    eq = np.empty(len(dates))
+    tos = np.zeros(len(dates))
+    W = np.zeros((len(dates), k))
+    total_cost = 0.0
+    trade_days = 0
 
-    def _rebalance(prices_row: pd.Series, target: pd.Series, when: str):
+    def _rebalance(prices: np.ndarray, target: np.ndarray, when: str):
         nonlocal cash, hold
         value = cash + hold.sum()
-        tgt = target.reindex(cols).fillna(0.0)
-        # drop tickers with no price at execution (never interpolate)
-        missing = tgt[(tgt > 0) & prices_row.reindex(cols).isna()]
-        for tkr in missing.index:
-            warnings.append(f"{when}: {tkr} has no price — weight {missing[tkr]:.4f} left in cash")
-        tgt[missing.index] = 0.0
+        tgt = target
+        missing = (tgt > 0) & ~np.isfinite(prices)
+        if missing.any():
+            tgt = tgt.copy()
+            for j in np.flatnonzero(missing):
+                warnings.append(f"{when}: {cols[j]} has no price — "
+                                f"weight {tgt[j]:.4f} left in cash")
+            tgt[missing] = 0.0
         # size against post-cost value so cash never goes negative:
         # estimate traded notional at pre-cost value, deduct cost, then allocate
-        traded = (tgt * value - hold).abs().sum()
+        traded = float(np.abs(tgt * value - hold).sum())
         cost = traded * rate
         value_net = value - cost
         hold = tgt * value_net
         cash = value_net - hold.sum()
-        return traded / value if value > 0 else 0.0, cost
+        return (traded / value if value > 0 else 0.0), cost
 
-    total_cost = 0.0
-    trade_days = 0
-    prev_close_prices = None
-
-    for i, dt in enumerate(dates):
-        o = open_.loc[dt]
-        c = close.loc[dt]
+    prev_c = None
+    for i in range(len(dates)):
+        o = O[i]
+        c = C[i]
         day_turnover = 0.0
+        held = hold != 0.0
 
         # overnight: prev close -> today's open (old holdings)
-        if prev_close_prices is not None:
-            ratio = (o / prev_close_prices).reindex(cols)
-            stale = ratio.isna() & (hold.abs() > 0)
-            for tkr in stale[stale].index:
-                warnings.append(f"{dt.date()} overnight: {tkr} price missing — "
-                                f"position value held flat (not interpolated)")
-            hold = hold * ratio.where(hold.abs() > 0, 1.0).fillna(1.0)
+        if prev_c is not None:
+            ratio = o / prev_c
+            ok = np.isfinite(ratio)
+            stale = held & ~ok
+            if stale.any():
+                d = dates[i].date()
+                for j in np.flatnonzero(stale):
+                    warnings.append(f"{d} overnight: {cols[j]} price missing — "
+                                    f"position value held flat (not interpolated)")
+            hold = hold * np.where(held & ok, ratio, 1.0)
 
         # execute pending rebalance at today's open
         if pending is not None:
-            to, cost = _rebalance(o, pending, f"{dt.date()} open")
+            to, cost = _rebalance(o, pending, f"{dates[i].date()} open")
             day_turnover += to
             total_cost += cost
             pending = None
 
         # intraday: open -> close (new holdings)
-        ratio = (c / o).reindex(cols)
-        hold = hold * ratio.where(hold.abs() > 0, 1.0).fillna(1.0)
+        held = hold != 0.0
+        ratio = c / o
+        ok = np.isfinite(ratio)
+        stale = held & ~ok
+        if stale.any():
+            d = dates[i].date()
+            for j in np.flatnonzero(stale):
+                warnings.append(f"{d} intraday: {cols[j]} price missing — "
+                                f"position value held flat (not interpolated)")
+        hold = hold * np.where(held & ok, ratio, 1.0)
 
         # signal today
-        if dt in targets.index:
-            target = targets.loc[dt]
-            if isinstance(target, pd.DataFrame):   # duplicate signal dates
-                raise ValueError(f"duplicate target rows for {dt}")
+        if i in plan:
+            target = plan[i]
             if execution == "close":
-                to, cost = _rebalance(c, target, f"{dt.date()} close")
+                to, cost = _rebalance(c, target, f"{dates[i].date()} close")
                 day_turnover += to
                 total_cost += cost
             else:
                 pending = target
 
         value = cash + hold.sum()
-        eq.append(value)
-        tos.append(day_turnover)
-        wts.append((hold / value).values if value > 0 else np.zeros(len(cols)))
+        eq[i] = value
+        tos[i] = day_turnover
+        if value > 0:
+            W[i] = hold / value
         if day_turnover > 1e-12:
             trade_days += 1
-        prev_close_prices = c
+        prev_c = c
 
     equity = pd.Series(eq, index=dates, name="equity")
     turnover = pd.Series(tos, index=dates, name="turnover")
-    weights = pd.DataFrame(wts, index=dates, columns=cols)
+    weights = pd.DataFrame(W, index=dates, columns=cols)
     returns = equity.pct_change().fillna(0.0)
     exposure = weights.abs().sum(axis=1)
     return BacktestResult(equity=equity, returns=returns, weights=weights,
