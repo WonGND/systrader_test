@@ -51,7 +51,15 @@ def _changes_only(pos: pd.Series, ticker: str) -> pd.DataFrame:
 # C1 — 자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)
 # --------------------------------------------------------------------------
 def build_c01(ohlc: dict) -> StrategyPlan:
-    return _c01(ohlc, with_cash_class=True)
+    # residual goes into the universe's cash asset (SHY), per the method's own
+    # worked example in post (72): "남는 비중은 현금으로 대치 (현금 비중에 추가)"
+    return _c01(ohlc, with_cash_class=True, residual_to="SHY")
+
+
+def build_c01_zero_cash(ohlc: dict) -> StrategyPlan:
+    """Same rules but the unallocated weight sits in 0%-yield cash — kept as a
+    contrast so the effect of the residual convention is visible."""
+    return _c01(ohlc, with_cash_class=True, residual_to=None)
 
 
 def build_c01_stock_bond(ohlc: dict) -> StrategyPlan:
@@ -61,7 +69,7 @@ def build_c01_stock_bond(ohlc: dict) -> StrategyPlan:
     return _c01(ohlc, with_cash_class=False)
 
 
-def _c01(ohlc: dict, with_cash_class: bool) -> StrategyPlan:
+def _c01(ohlc: dict, with_cash_class: bool, residual_to: str | None = None) -> StrategyPlan:
     classes = {"equity": ["SPY", "EFA", "EEM"], "bond": ["IEF", "TLT"], "cash": ["SHY"]}
     if not with_cash_class:
         classes.pop("cash")
@@ -75,6 +83,8 @@ def _c01(ohlc: dict, with_cash_class: bool) -> StrategyPlan:
         base = (1.0 / len(classes)) / len(members)
         for t in members:
             weights[t] = base * score[t]
+    if residual_to:
+        weights[residual_to] = weights[residual_to] + (1.0 - weights.sum(axis=1))
     targets = weights.dropna(how="any")
     n = len(classes)
     return StrategyPlan(
@@ -84,32 +94,46 @@ def _c01(ohlc: dict, with_cash_class: bool) -> StrategyPlan:
               else "자산군 배분 x 평균 모멘텀 스코어 — 현금군 제외판 (원문 9%/-8.52% 대조용)"),
         tickers=tickers, mode="portfolio", execution="next_open", targets=targets,
         notes=[f"자산군 배분 {':'.join(['1']*n)}, 종목 비중 = (1/{n})/자산군내 종목수 x 12개월 평균 모멘텀 스코어",
-               "미배분 잔여분은 현금(수익 0) — 원문 '현금 혼합' 구조",
+               (f"미배분 잔여분을 현금 자산 {residual_to}에 가산 (원문 (72) 예시 산식 그대로)"
+                if residual_to else "미배분 잔여분은 수익률 0% 현금 (현금 자산 없는 구성)"),
                "체결 시점 원문 미명시 → 엔진 기본값 익일 시가 (가정값)"])
 
 
 # --------------------------------------------------------------------------
 # C2 — 동적 영구 / 올웨더 포트폴리오 (72)
 # --------------------------------------------------------------------------
-def _c02(ohlc: dict, base: dict, key: str, label: str) -> StrategyPlan:
+def _c02(ohlc: dict, base: dict, key: str, label: str,
+         residual_to: str | None = None) -> StrategyPlan:
     tickers = list(base)
     close = pd.DataFrame({t: ohlc[t]["Close"] for t in tickers})
     m = ind.monthly_closes(close)
     score = ind.avg_momentum_score(m, range(1, 13))
     weights = pd.DataFrame({t: base[t] * score[t] for t in tickers})
+    if residual_to:
+        weights[residual_to] = weights[residual_to] + (1.0 - weights.sum(axis=1))
     targets = weights.dropna(how="any")
     return StrategyPlan(
         key=key, spec_id="c02-dynamic-permanent-allweather-72",
         name=f"동적 {label} 포트폴리오 (72)",
         tickers=tickers, mode="portfolio", execution="next_open", targets=targets,
         notes=[f"기본 배분 {base} x 12개월 평균 모멘텀 스코어",
-               "잔여 비중 전액 현금 (원문: '현금 비중 = 1 - 각 자산 비중의 총합')",
+               (f"잔여 비중을 현금 자산 {residual_to}에 가산 — 원문 예시: 스코어 0.7/0.5/0.2/1 → "
+                "17.5/12.5/5/25(합 60%), 남는 40%를 현금에 더해 최종 17.5/12.5/5/65"
+                if residual_to else
+                "유니버스에 '현금' 자산이 없어 잔여 비중은 수익률 0% 현금 (원문 미명시 — 가정값)"),
                "원문은 '다음날 마감 동시호가 종가' 체결을 언급 → 엔진 기본 익일 시가로 대체(가정값)"])
 
 
 def build_c02_permanent(ohlc):
+    # the post's universe labels AGG as the 현금 line, and its worked example
+    # adds the unallocated weight to that line
     return _c02(ohlc, {"SPY": .25, "TLT": .25, "GLD": .25, "AGG": .25},
-                "c02_permanent", "영구")
+                "c02_permanent", "영구", residual_to="AGG")
+
+
+def build_c02_permanent_zero_cash(ohlc):
+    return _c02(ohlc, {"SPY": .25, "TLT": .25, "GLD": .25, "AGG": .25},
+                "c02_permanent_zero_cash", "영구(잔여=0% 현금 대조판)")
 
 
 def build_c02_allweather(ohlc):
@@ -350,7 +374,8 @@ def build_c09_qqq_gated(ohlc):
 
 
 BUILDERS = [
-    build_c01, build_c01_stock_bond, build_c02_permanent, build_c02_allweather,
+    build_c01, build_c01_zero_cash, build_c01_stock_bond,
+    build_c02_permanent, build_c02_permanent_zero_cash, build_c02_allweather,
     build_c03, build_c04, build_c05, build_c06, build_c07, build_c08,
     build_c09_spy, build_c09_qqq, build_c09_qqq_gated,
 ]

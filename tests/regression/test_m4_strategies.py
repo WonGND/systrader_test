@@ -90,7 +90,9 @@ def test_state_machine_buy_wins_and_carries():
 
 # ---------------------------------------------------------------- strategies
 def test_c01_class_budget_and_score_scaling(ohlc):
-    plan = S.build_c01(ohlc)
+    # budget invariants hold before the residual is routed into the cash line,
+    # so they are checked on the zero-cash contrast variant
+    plan = S.build_c01_zero_cash(ohlc)
     tg = plan.targets
     assert list(tg.columns) == ["SPY", "EFA", "EEM", "IEF", "TLT", "SHY"]
     # each ticker's weight can never exceed its class budget
@@ -105,8 +107,23 @@ def test_c01_class_budget_and_score_scaling(ohlc):
     assert pd.Timestamp("2004-04-14") <= tg.index[0] <= pd.Timestamp("2004-05-31")
 
 
+def test_residual_routes_into_the_cash_asset(ohlc):
+    """The method's worked example adds the unallocated weight to the cash
+    line, so those variants must be fully invested; the contrast variants
+    must not be."""
+    for builder, cash_asset in [(S.build_c01, "SHY"), (S.build_c02_permanent, "AGG")]:
+        tg = builder(ohlc).targets
+        assert np.allclose(tg.sum(axis=1), 1.0), builder.__name__
+        # the cash line absorbs the residual, so it exceeds its base weight
+        assert tg[cash_asset].max() > tg.drop(columns=[cash_asset]).max().max()
+    for builder in (S.build_c01_zero_cash, S.build_c02_permanent_zero_cash):
+        tg = builder(ohlc).targets
+        assert (tg.sum(axis=1) <= 1.0 + 1e-9).all()
+        assert tg.sum(axis=1).min() < 0.99, builder.__name__   # really holds cash
+
+
 def test_c02_permanent_weights_scale_base_by_score(ohlc):
-    plan = S.build_c02_permanent(ohlc)
+    plan = S.build_c02_permanent_zero_cash(ohlc)
     tg = plan.targets
     assert set(tg.columns) == {"SPY", "TLT", "GLD", "AGG"}
     assert (tg <= 0.25 + 1e-12).all().all()
