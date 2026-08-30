@@ -51,7 +51,20 @@ def _changes_only(pos: pd.Series, ticker: str) -> pd.DataFrame:
 # C1 — 자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)
 # --------------------------------------------------------------------------
 def build_c01(ohlc: dict) -> StrategyPlan:
+    return _c01(ohlc, with_cash_class=True)
+
+
+def build_c01_stock_bond(ohlc: dict) -> StrategyPlan:
+    """The post reports CAGR 9% / MDD -8.52% for the CASH-EXCLUDED variant
+    ("주식:채권만으로 구성된 모멘텀 포트폴리오"), so that configuration is the
+    one those two numbers can actually be compared against."""
+    return _c01(ohlc, with_cash_class=False)
+
+
+def _c01(ohlc: dict, with_cash_class: bool) -> StrategyPlan:
     classes = {"equity": ["SPY", "EFA", "EEM"], "bond": ["IEF", "TLT"], "cash": ["SHY"]}
+    if not with_cash_class:
+        classes.pop("cash")
     tickers = [t for v in classes.values() for t in v]
     close = pd.DataFrame({t: ohlc[t]["Close"] for t in tickers})
     m = ind.monthly_closes(close)
@@ -63,11 +76,14 @@ def build_c01(ohlc: dict) -> StrategyPlan:
         for t in members:
             weights[t] = base * score[t]
     targets = weights.dropna(how="any")
+    n = len(classes)
     return StrategyPlan(
-        key="c01", spec_id="c01-avg-momentum-score-allocation-14-17",
-        name="자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)",
+        key="c01" if with_cash_class else "c01_stock_bond",
+        spec_id="c01-avg-momentum-score-allocation-14-17",
+        name=("자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)" if with_cash_class
+              else "자산군 배분 x 평균 모멘텀 스코어 — 현금군 제외판 (원문 9%/-8.52% 대조용)"),
         tickers=tickers, mode="portfolio", execution="next_open", targets=targets,
-        notes=["자산군 배분 1:1:1, 종목 비중 = (1/3)/자산군내 종목수 x 12개월 평균 모멘텀 스코어",
+        notes=[f"자산군 배분 {':'.join(['1']*n)}, 종목 비중 = (1/{n})/자산군내 종목수 x 12개월 평균 모멘텀 스코어",
                "미배분 잔여분은 현금(수익 0) — 원문 '현금 혼합' 구조",
                "체결 시점 원문 미명시 → 엔진 기본값 익일 시가 (가정값)"])
 
@@ -293,25 +309,32 @@ def build_c08(ohlc: dict) -> StrategyPlan:
 # --------------------------------------------------------------------------
 # C9 — IBS·하한선 역추세 (원판, 단일 ETF)
 # --------------------------------------------------------------------------
-def _c09(ohlc: dict, ticker: str) -> StrategyPlan:
+def _c09(ohlc: dict, ticker: str, gate_entry: bool = False) -> StrategyPlan:
     df = ohlc[ticker]
     h, l, c = df["High"], df["Low"], df["Close"]
     range_ma = (h - l).rolling(25).mean()
     lower = h.rolling(10).mean() - 2.5 * range_ma
     ibs = (c - l) / (h - l).replace(0, np.nan)
+    above300 = c > ind.sma(c, 300)
     buy = (c < lower) & (ibs < 0.3)
-    sell = (c > h.shift(1)) | (c < ind.sma(c, 300))
+    if gate_entry:
+        buy = buy & above300
+    sell = (c > h.shift(1)) | ~above300
     pos = ind.state_machine(buy, sell)
     return StrategyPlan(
-        key=f"c09_{ticker.lower()}", spec_id="c09-ibs-lower-band-mean-reversion",
-        name=f"IBS·하한선 역추세 (원판, {ticker})",
+        key=f"c09_{ticker.lower()}" + ("_gated" if gate_entry else ""),
+        spec_id="c09-ibs-lower-band-mean-reversion",
+        name=f"IBS·하한선 역추세 (원판, {ticker})" + (" — 300일선 진입필터판" if gate_entry else ""),
         tickers=[ticker], mode="portfolio", execution="next_open",
         targets=_changes_only(pos, ticker), warmup_days=300,
         notes=["하한선 = 10일 고가 이동평균 - 2.5 x 25일 (고가-저가) 이동평균",
                "IBS = (종가-저가)/(고가-저가), 매수: 종가<하한선 & IBS<0.3",
                "청산: 종가 > 전일 고가, 또는 종가 < 300일 이평",
                "개별주 확장판은 point-in-time 구성종목 부재로 생존편향 제거 불가 → 원판만",
-               "포지션 크기·체결 시점 원문 미명시 → 100% / 익일 시가 (가정값)"])
+               "포지션 크기·체결 시점 원문 미명시 → 100% / 익일 시가 (가정값)",
+               ("300일선을 진입 필터로도 적용(가정값) — 원문은 청산 조건으로만 서술"
+                if gate_entry else
+                "300일선은 원문대로 청산 조건으로만 적용 → 하락추세 중 진입이 가능")])
 
 
 def build_c09_spy(ohlc):
@@ -322,10 +345,14 @@ def build_c09_qqq(ohlc):
     return _c09(ohlc, "QQQ")
 
 
+def build_c09_qqq_gated(ohlc):
+    return _c09(ohlc, "QQQ", gate_entry=True)
+
+
 BUILDERS = [
-    build_c01, build_c02_permanent, build_c02_allweather, build_c03,
-    build_c04, build_c05, build_c06, build_c07, build_c08,
-    build_c09_spy, build_c09_qqq,
+    build_c01, build_c01_stock_bond, build_c02_permanent, build_c02_allweather,
+    build_c03, build_c04, build_c05, build_c06, build_c07, build_c08,
+    build_c09_spy, build_c09_qqq, build_c09_qqq_gated,
 ]
 
 ALL_TICKERS = sorted({

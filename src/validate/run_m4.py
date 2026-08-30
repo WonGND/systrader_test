@@ -64,6 +64,7 @@ def _run_plan(plan, open_, close, commission, slippage, execution=None):
                            execution=execution, commission=commission,
                            slippage=slippage)
         summ = res.summary()
+        summ.update(metrics.monthly_summary(res.equity))
         summ["warnings"] = len(res.warnings)
         summ["start"] = str(c.index[0].date())
         summ["end"] = str(c.index[-1].date())
@@ -88,12 +89,24 @@ def _run_plan(plan, open_, close, commission, slippage, execution=None):
     returns = equity.pct_change().fillna(0.0)
     trade_days = int((turnover > 1e-12).sum())
     summ = metrics.summary(equity, returns, exposure, turnover, trade_days)
+    summ.update(metrics.monthly_summary(equity))
     summ["costs_paid"] = float("nan")
     summ["warnings"] = warn
     summ["start"] = str(c.index[0].date())
     summ["end"] = str(c.index[-1].date())
     summ["sleeves"] = len(eqs)
     return summ
+
+
+def _spy_same_window(plan, open_, close):
+    """SPY buy&hold over this strategy's exact window — isolates period effects
+    from logic differences when comparing against a post's numbers."""
+    from src.backtest import strategies_basic as sb
+    o, c = _slice_window(plan, open_, close)
+    res = run_backtest(c[["SPY"]], o[["SPY"]], sb.buy_and_hold(c.index, "SPY"))
+    s = res.summary()
+    s.update(metrics.monthly_summary(res.equity))
+    return s
 
 
 def _reported(spec_id: str) -> dict:
@@ -113,6 +126,11 @@ def _fmt(s: dict) -> str:
     return (f"CAGR {s['cagr']*100:7.2f}% | MDD {s['mdd']*100:8.2f}% | "
             f"Sharpe {s['sharpe']:5.2f} | 승률 {s['win_rate']*100:5.1f}% | "
             f"거래일 {s['trade_days']:5d} | 연회전 {s['turnover_annual_oneway']:5.2f}")
+
+
+def _fmt_m(s: dict) -> str:
+    return (f"CAGR {s['cagr_m']*100:7.2f}% | MDD {s['mdd_m']*100:8.2f}% | "
+            f"Sharpe {s['sharpe_m']:5.2f}")
 
 
 def main() -> int:
@@ -155,8 +173,17 @@ def main() -> int:
             continue
         print(f"  기간: {free['start']} ~ {free['end']}"
               + (f" | 슬리브 {free['sleeves']}개" if "sleeves" in free else ""))
-        print(f"  무비용   : {_fmt(free)}")
-        print(f"  비용반영 : {_fmt(paid)}")
+        print(f"  무비용(일간) : {_fmt(free)}")
+        print(f"  무비용(월간) : {_fmt_m(free)}   <- 원문이 R/월간 산출이면 이 줄과 비교")
+        print(f"  비용반영(일간): {_fmt(paid)}")
+        try:
+            spy = _spy_same_window(plan, open_, close)
+            print(f"  동일구간 SPY : {_fmt(spy)}")
+            print(f"  동일구간 SPY(월간): {_fmt_m(spy)}")
+            free["spy_same_window"] = {k: spy[k] for k in
+                                       ("cagr", "mdd", "sharpe", "cagr_m", "mdd_m", "sharpe_m")}
+        except Exception as exc:
+            print(f"  [SPY 대조 ERROR] {exc}")
         if plan.alt_execution:
             try:
                 alt = _run_plan(plan, open_, close, 0.0, 0.0, execution=plan.alt_execution)

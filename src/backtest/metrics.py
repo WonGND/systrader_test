@@ -67,3 +67,23 @@ def summary(equity: pd.Series, returns: pd.Series, exposure: pd.Series,
         "turnover_annual_oneway": float(turnover.sum() / years),
         "total_return": float(equity.iloc[-1] / equity.iloc[0] - 1),
     }
+
+
+def monthly_summary(equity: pd.Series) -> dict:
+    """Metrics recomputed on MONTH-END sampled equity.
+
+    Several source posts report figures produced by R/PerformanceAnalytics on
+    monthly series. Daily and monthly conventions differ materially: SPY's GFC
+    drawdown is about -55% daily but about -51% month-end, and Sharpe scales by
+    sqrt(12) instead of sqrt(252). Reporting both makes it visible whether a
+    gap against a post's numbers is a convention difference or a logic one.
+    """
+    idx = equity.index
+    ends = pd.Series(idx, index=idx.to_period("M")).groupby(level=0).last().values
+    m = equity.loc[pd.DatetimeIndex(ends)]
+    r = m.pct_change().dropna()
+    if len(r) < 2 or r.std(ddof=1) == 0:
+        sh = 0.0
+    else:
+        sh = float(r.mean() / r.std(ddof=1) * np.sqrt(12))
+    return {"cagr_m": cagr(m), "mdd_m": max_drawdown(m), "sharpe_m": sh}
