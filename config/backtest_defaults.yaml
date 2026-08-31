@@ -32,8 +32,9 @@ data:
   source: yfinance
   base_currency: USD
   total_return: true                    # 배당 포함 총수익 기준
-  # auto_adjust 값은 M3 엔진 구현 시 확정하고 docs/data_limitations.md L-05에 기록
-  auto_adjust: null
+  # M3에서 확정(2026-08-26). docs/data_limitations.md L-05 참조.
+  # 코드 값은 src/backtest/data.py:AUTO_ADJUST — 둘이 어긋나면 버그로 취급한다.
+  auto_adjust: true
   interpolate_missing: false            # 결측 보간 금지 — 기록만 한다
   cache_dir: "cache/yfinance"           # gitignore 대상
   allow_index_proxy_before_inception: false

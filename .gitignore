@@ -31,3 +31,6 @@ Thumbs.db
 
 # 로컬 실행 산출물 (원격 세션은 전달받아 리포트에 반영)
 reports/m4_output.txt
+reports/m5_output.txt
+reports/m4_results.json
+reports/m5_results.json

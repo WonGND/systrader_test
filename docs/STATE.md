@@ -1,8 +1,15 @@
 # STATE
 
-- 현재 마일스톤: **M4 — Track A 인샘플 재현 / 게이트 보고 제출 — 사용자 승인 대기**
-  - 보고서: `reports/M4_inSample_reproduction.md` (미결 질문 Q9~Q12, 전부 blocking)
-  - 승인 시 다음: M5 OOS(2019-01-01~현재), Track A 9 + C13 = 10전략
+- 현재 마일스톤: **M5 — OOS 검증 (구현 완료, 로컬 실행 대기)**
+  - **다음 액션(사용자)**: 로컬에서 `.\scripts\run_local.ps1` 실행 후 출력 전달
+    (기본 Task가 m5. M4 재실행은 `-Task m4`)
+  - 구현: `src/validate/run_m5.py` + `src/validate/strategies_m5.py`(C13 이식판)
+  - 판정: §7 v1.0, **비용반영 일간 기준**(Q11), 벤치마크 SPY도 동일 비용
+  - 실행 방식: 전략별 전체 기간 1회 실행 후 지표를 인샘플/OOS로 절단
+    (2019년 재시작 금지 — 경계에서 포지션 강제 청산·가짜 거래 방지)
+  - 워크포워드: 롤링 36개월 안정성 점검, **파라미터 재적합 없음**
+- M4: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q9~Q12 전부 권장안 확정.
+  보고서: `reports/M4_inSample_reproduction.md`
 - M3: **2026-08-26 승인 종결** ("M3 승인할게"). 보고서: `reports/M3_engine_regression.md`
 - M4 실행 3차 완료(2026-08-30 로컬, 15런). 결과는 로컬 `reports/m4_results.json`(gitignore)
   - **핵심 단서 1**: 원문(C2) 표의 SPY MDD -50.78%는 SPY의 **월말 기준** 낙폭과 일치.
@@ -104,17 +111,14 @@
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
 ## 미결
-- **Q9~Q12 (`docs/OPEN_QUESTIONS.md` M4 절): M4 게이트 승인 대기 — blocking**
-- C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, 보고서 §4)
+- **W14: M5 로컬 실행 출력 전달 대기** (`.\scripts\run_local.ps1`)
+- C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, M4 보고서 §4)
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. **M4 게이트 승인 여부를 먼저 확인한다.** 미승인 상태면 M5에 착수하지 않는다
-   (CLAUDE.md §1-9). 승인 회신에 Q9~Q12 처리가 포함됐는지 확인한다.
-3. 승인 시 M5 착수: `src/validate/run_m5.py` 작성 —
-   OOS 2019-01-01~현재, 인샘플과 **동일 코드·동일 가정값**, Track A 9 + C13 = 10전략.
-   판정은 CLAUDE.md §7 v1.0, 벤치마크는 **각 전략과 동일 구간의 SPY**.
-   OOS 리밸런싱 12회 미만이면 `insufficient_sample`.
-4. 실행은 사용자 로컬(B-02: 원격 세션은 yfinance 도메인 차단). 원격은 코드·리포트만.
-5. 결과는 `reports/M5_oos_validation.md`에 전략별 판정표 + 생존편향 노출 +
-   적용 한계(L-01·L-06·L-07·L-08) 인용으로 정리하고 게이트 승인을 요청한다.
+2. 사용자가 전달한 **M5 실행 출력**이 있는지 확인한다.
+3. 있으면: `reports/M5_oos_validation.md` 작성 — 전략별 판정표(alive/weak/dead/
+   insufficient_sample), 인샘플 대비 열화 폭, 워크포워드 안정성, 생존편향 노출 수준,
+   적용 한계(L-01·L-06·L-07·L-08) 인용 → M5 게이트 승인 요청.
+4. 없으면: `.\scripts\run_local.ps1` 실행을 요청한다(원격은 yfinance 차단, B-02).
+5. M5 승인 전에는 M6(전량 배치)에 착수하지 않는다.
