@@ -147,7 +147,8 @@ def main() -> int:
     print("=" * 84)
     print(f"M4 인샘플 재현 | 종료일 {IN_SAMPLE_END} | yfinance auto_adjust=True")
     print(f"비용: 무비용(원문 대조용) / 비용반영(수수료 {comm*100:.2f}%, 편도 슬리피지 {slip*100:.2f}%)")
-    print("대상: Track A 9개 전략 (변형 포함 11개 런). C13(ported)은 이식 전략이라 M4 제외.")
+    print(f"대상: Track A 9개 전략 (변형 포함 {len(S.BUILDERS)}개 런). "
+          "C13(ported)은 이식 전략이라 M4 제외.")
     print("=" * 84)
 
     print(f"\n[데이터] {len(S.ALL_TICKERS)}개 티커 로드 중 ({FETCH_START}~{FETCH_END}) ...")

@@ -53,23 +53,24 @@ def _changes_only(pos: pd.Series, ticker: str) -> pd.DataFrame:
 def build_c01(ohlc: dict) -> StrategyPlan:
     # residual goes into the universe's cash asset (SHY), per the method's own
     # worked example in post (72): "남는 비중은 현금으로 대치 (현금 비중에 추가)"
-    return _c01(ohlc, with_cash_class=True, residual_to="SHY")
+    return _c01(ohlc, with_cash_class=True, residual_to="SHY", key="c01")
 
 
 def build_c01_zero_cash(ohlc: dict) -> StrategyPlan:
     """Same rules but the unallocated weight sits in 0%-yield cash — kept as a
     contrast so the effect of the residual convention is visible."""
-    return _c01(ohlc, with_cash_class=True, residual_to=None)
+    return _c01(ohlc, with_cash_class=True, residual_to=None, key="c01_zero_cash")
 
 
 def build_c01_stock_bond(ohlc: dict) -> StrategyPlan:
     """The post reports CAGR 9% / MDD -8.52% for the CASH-EXCLUDED variant
     ("주식:채권만으로 구성된 모멘텀 포트폴리오"), so that configuration is the
     one those two numbers can actually be compared against."""
-    return _c01(ohlc, with_cash_class=False)
+    return _c01(ohlc, with_cash_class=False, key="c01_stock_bond")
 
 
-def _c01(ohlc: dict, with_cash_class: bool, residual_to: str | None = None) -> StrategyPlan:
+def _c01(ohlc: dict, with_cash_class: bool, key: str,
+         residual_to: str | None = None) -> StrategyPlan:
     classes = {"equity": ["SPY", "EFA", "EEM"], "bond": ["IEF", "TLT"], "cash": ["SHY"]}
     if not with_cash_class:
         classes.pop("cash")
@@ -88,9 +89,10 @@ def _c01(ohlc: dict, with_cash_class: bool, residual_to: str | None = None) -> S
     targets = weights.dropna(how="any")
     n = len(classes)
     return StrategyPlan(
-        key="c01" if with_cash_class else "c01_stock_bond",
+        key=key,
         spec_id="c01-avg-momentum-score-allocation-14-17",
-        name=("자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)" if with_cash_class
+        name=("자산군 비중 배분 x 평균 모멘텀 스코어 (14)(17)"
+              + ("" if residual_to else " — 잔여=0% 현금 대조판") if with_cash_class
               else "자산군 배분 x 평균 모멘텀 스코어 — 현금군 제외판 (원문 9%/-8.52% 대조용)"),
         tickers=tickers, mode="portfolio", execution="next_open", targets=targets,
         notes=[f"자산군 배분 {':'.join(['1']*n)}, 종목 비중 = (1/{n})/자산군내 종목수 x 12개월 평균 모멘텀 스코어",
