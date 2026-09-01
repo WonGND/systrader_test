@@ -1,20 +1,20 @@
 # STATE
 
-- 현재 마일스톤: **M5 — OOS 검증 완료 / 게이트 보고 제출 — 사용자 승인 대기**
-  - 보고서: `reports/M5_oos_validation.md` (미결 질문 Q13~Q16, 전부 blocking)
+- 현재 마일스톤: **M6 — 배치 / 최종 리포트 (진행 중)**
+  - **다음 액션(사용자)**: C10·C12 원문 전달 (§미결 W16)
+    `python -m src.extractor.make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt`
+    → `data/archive/m6_bundle.txt` 내용 전달 (저장소 커밋 금지)
+  - 구현 완료: `src/validate/run_m6.py`(배치 + 발행후 보조 슬라이스 + 통합 판정표),
+    `src/validate/strategies_m6.py`(C10·C12 삽입 지점), `make_bundle --match/--out`
+  - 남은 작업: C10·C12 스펙 작성 → 빌더 구현 → 로컬 배치 실행 → `reports/M6_final_report.md`
+- M5: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q13~Q16 전부 권장안 확정.
+  보고서: `reports/M5_oos_validation.md`
   - **결과: alive 0 / weak 14 / dead 3 / insufficient_sample 0 (17런)**
-    - 17런 **전부**가 기준 (3) OOS CAGR ≥ SPY에서 탈락. OOS SPY가 CAGR 17.53%로 이례적 강세
-    - (1) Sharpe≥0.5는 14/17, (2) MDD≤인샘플×1.5도 14/17 통과 → "무너지진 않았으나 지수를 못 이김"
-    - 위험조정으로 보면 SPY(Sharpe 0.94) 초과 3건(c06 1.19, c02_perm_zc 1.06, c02_aw 0.97),
-      17런 전부 SPY(-33.72%)보다 낙폭 얕음 — 판정은 바꾸지 않고 보조 정보로 병기
-    - dead 3건: c07(계절성, Sharpe 0.94→0.08 붕괴), c09_spy(MDD 2.5배, 2020 -14.9%),
-      c01(기준(2)만 미달 — 잔여분 SHY 라우팅이 2022 채권 급락에 노출)
-    - **L-09 신규(중대)**: 발행일이 OOS 안인 글 5개(C2/C6/C7/C8/C9)는 진정한 OOS 아님
-  - 구현: `src/validate/run_m5.py` + `src/validate/strategies_m5.py`(C13 이식판)
-  - 판정: §7 v1.0, **비용반영 일간 기준**(Q11), 벤치마크 SPY도 동일 비용
-  - 실행 방식: 전략별 전체 기간 1회 실행 후 지표를 인샘플/OOS로 절단
-    (2019년 재시작 금지 — 경계에서 포지션 강제 청산·가짜 거래 방지)
-  - 워크포워드: 롤링 36개월 안정성 점검, **파라미터 재적합 없음**
+  - 17런 **전부** 기준 (3) OOS CAGR ≥ SPY에서 탈락 (OOS SPY CAGR 17.53%)
+  - (1) Sharpe≥0.5 14/17, (2) MDD≤인샘플×1.5 14/17 → "무너지진 않았으나 지수를 못 이김"
+  - dead 3: c07(계절성 Sharpe 0.94→0.08 붕괴), c09_spy(MDD 2.5배), c01(기준(2)만 미달)
+  - **L-09(중대)**: 발행일이 OOS 안인 글 5개(C2/C6/C7/C8/C9)는 진정한 OOS 아님
+  - C11·C14·C15 정식 제외 확정, 미정독 코스닥 14건은 `unclassified_out_of_scope` 공시
 - M4: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q9~Q12 전부 권장안 확정.
   보고서: `reports/M4_inSample_reproduction.md`
 - M3: **2026-08-26 승인 종결** ("M3 승인할게"). 보고서: `reports/M3_engine_regression.md`
@@ -52,7 +52,7 @@
 - **10개 확정(2026-08-26)**: C1~C9+C13, Q7/Q8 승인 → 스펙 JSON 10건 생성 완료
   (`data/specs/c*.json`, 인용 181건 원문 기계 대조, 스키마 검증 0오류)
 - (M2 이력) 게이트 종결 완료 — 위 참조
-- 최종 갱신: 2026-08-31
+- 최종 갱신: 2026-08-31 (M6 착수)
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
 - robots.txt: 크롤링 **허용** (/guestbook, /manage, /search 등만 불허)
@@ -80,7 +80,10 @@
 - [x] requirements.txt 생성
 - [x] 원문 파일 3종 정밀 재검증 — 스키마·화이트리스트·CLAUDE.md 핵심 값 31/31 지시서 일치
 - [x] M1 실행 계획 제출 → `reports/M0_survey_and_M1_plan.md`
-- [ ] **사용자 승인 대기 중**
+- [x] M1~M5 게이트 전부 승인 종결 (M1·M2·M3 2026-08-26, M4·M5 2026-08-31)
+- [x] M6 배치 러너 구현 (`run_m6.py`, 발행후 보조 슬라이스 + 통합 판정표)
+- [ ] C10·C12 스펙 작성 (원문 전달 대기 — W16)
+- [ ] M6 배치 로컬 실행 → `reports/M6_final_report.md` → 최종 게이트 승인
 
 ## 블로커
 
@@ -118,13 +121,15 @@
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
 ## 미결
-- **Q13~Q16 (`docs/OPEN_QUESTIONS.md` M5 절): M5 게이트 승인 대기 — blocking**
+- **W16: C10·C12 원문 전달 대기** (`make_bundle --match ...`) — 스펙 작성의 전제
 - C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, M4 보고서 §4)
+- 미정독 코스닥 계열 14건 `unclassified_out_of_scope` (Q15로 범위 밖 확정, 공시 완료)
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. **M5 게이트 승인 여부를 먼저 확인한다.** 미승인이면 M6에 착수하지 않는다(§1-9).
-3. 승인 시 M6: ① C10·C12 스펙 작성(원문 인용 기반, 본문은 사용자 로컬에서 전달받음)
-   ② 12전략 배치 재실행(M4·M5 동일 코드) ③ Q14 승인 시 발행일 기준 보조 슬라이스
-   ④ `reports/M6_final_report.md` — 통합 판정표 + 전략별 1페이지 + 한계(L-01·L-06~L-09).
-4. 실행은 사용자 로컬(B-02). 원격은 코드·리포트만.
+2. 사용자가 전달한 **m6 번들**(C10·C12 본문)이 있는지 확인한다.
+3. 있으면: 두 글 정독 → 스펙 JSON 2건 작성(인용 기계 대조·스키마 검증) →
+   `strategies_m6.PENDING_BUILDERS`에 빌더 추가 → 로컬 배치 실행 요청.
+4. 없으면: `make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt` 실행 요청.
+5. 배치 출력 수신 후 `reports/M6_final_report.md` 작성 —
+   통합 판정표 + 전략별 1페이지 + 가정값 전수 + 한계(L-01·L-06~L-09) → 최종 게이트 승인 요청.

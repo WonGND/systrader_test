@@ -28,6 +28,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--parts", type=int, default=1,
                     help="split output into N files (m2_bundle_partK.txt)")
+    ap.add_argument("--match", nargs="*", default=None,
+                    help="only bundle posts whose title contains one of these "
+                         "substrings (M6: pull just the posts still needed)")
+    ap.add_argument("--out", default=None,
+                    help="output filename inside data/archive/ (default m2_bundle.txt)")
     args = ap.parse_args()
     if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
         try:
@@ -37,6 +42,12 @@ def main() -> int:
 
     with open(SHORTLIST_PATH, encoding="utf-8") as f:
         shortlist = json.load(f)["posts"]
+    if args.match:
+        shortlist = [p for p in shortlist
+                     if any(m in p["title"] for m in args.match)]
+        if not shortlist:
+            print(f"[!] --match {args.match} 에 해당하는 글이 shortlist에 없습니다.")
+            return 1
     index = load_index()
     by_url = {r["url"]: r for r in index.values()}
 
@@ -63,7 +74,8 @@ def main() -> int:
         chunk = sections[k * per:(k + 1) * per]
         if not chunk:
             break
-        path = BUNDLE_PATH if n == 1 else config.ARCHIVE_DIR / f"m2_bundle_part{k+1}.txt"
+        base = config.ARCHIVE_DIR / args.out if args.out else BUNDLE_PATH
+        path = base if n == 1 else base.with_name(f"{base.stem}_part{k+1}{base.suffix}")
         with open(path, "w", encoding="utf-8") as f:
             f.write("".join(chunk))
         paths.append(path)

@@ -154,6 +154,19 @@ def judge(oos: dict, ins: dict, spy_oos: dict) -> dict:
             }, "reason": None}
 
 
+def spy_window(open_, close, start, commission, slippage) -> dict:
+    """SPY buy&hold from `start`, same cost assumption as the strategy (§7)."""
+    o, c = open_.loc[start:], close.loc[start:]
+    r = run_backtest(c[["SPY"]], o[["SPY"]], sb.buy_and_hold(c.index, "SPY"),
+                     commission=commission, slippage=slippage)
+    s = metrics.summary(r.equity, r.returns, r.exposure, r.turnover, r.trade_days)
+    s.update(metrics.monthly_summary(r.equity))
+    s["rebalances"] = r.trade_days
+    s["start"] = str(c.index[0].date())
+    s["end"] = str(c.index[-1].date())
+    return s
+
+
 def walk_forward(run: dict) -> dict:
     """Rolling-window stability, NOT re-optimization.
 
@@ -226,18 +239,7 @@ def main() -> int:
     ohlc = {t: data.fetch_ohlc(t, FETCH_START, fetch_end) for t in S.ALL_TICKERS}
 
     # benchmark: SPY buy&hold on the OOS window, same cost assumption (§7)
-    def spy_window(start):
-        o, c = open_.loc[start:], close.loc[start:]
-        r = run_backtest(c[["SPY"]], o[["SPY"]], sb.buy_and_hold(c.index, "SPY"),
-                         commission=comm, slippage=slip)
-        s = metrics.summary(r.equity, r.returns, r.exposure, r.turnover, r.trade_days)
-        s.update(metrics.monthly_summary(r.equity))
-        s["rebalances"] = r.trade_days
-        s["start"] = str(c.index[0].date())
-        s["end"] = str(c.index[-1].date())
-        return s
-
-    spy_oos = spy_window(OOS_START)
+    spy_oos = spy_window(open_, close, OOS_START, comm, slip)
     spy_c = close.loc[OOS_START:]
     print(f"\n[벤치마크] SPY Buy&Hold {spy_c.index[0].date()}~{spy_c.index[-1].date()} "
           f"(비용반영): {_fmt(spy_oos)}")
@@ -267,7 +269,7 @@ def main() -> int:
         # coincide; if one ever started later, judge it against ITS window's SPY
         bench = spy_oos
         if oos["start"] != spy_oos["start"]:
-            bench = spy_window(pd.Timestamp(oos["start"]))
+            bench = spy_window(open_, close, pd.Timestamp(oos["start"]), comm, slip)
             print(f"  [주의] OOS 시작일이 벤치마크와 달라 구간 정렬 SPY로 판정 "
                   f"({bench['start']}~, CAGR {bench['cagr']*100:.2f}%)")
         v = judge(oos, ins, bench)
