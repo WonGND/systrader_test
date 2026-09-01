@@ -77,9 +77,62 @@ def crawl_category(fetcher, key: str, limit, dry_run: bool, state: dict) -> dict
     return stats
 
 
+def shortlist_urls(matches: list) -> list:
+    """[(title, url)] for shortlist entries whose title contains a match."""
+    import json
+    path = config.REPO_ROOT / "data" / "specs" / "m2_shortlist.json"
+    with open(path, encoding="utf-8") as f:
+        posts = json.load(f)["posts"]
+    return [(p["title"], p["url"]) for p in posts
+            if any(m in p["title"] for m in matches)]
+
+
+def crawl_urls(fetcher, urls: list, key: str, dry_run: bool, state: dict) -> dict:
+    """Archive specific post URLs, skipping listing collection.
+
+    For topping up an archive on a second machine (M6: two posts whose text the
+    session needs). Same fetcher, same robots check, same 2s floor as a full
+    run — this is not a faster path, just a narrower one.
+    """
+    print(f"\n### url list — {len(urls)}건 (category '{key}')")
+    stats = {"archived": 0, "skipped": 0, "failed": 0,
+             "collected": len(urls), "advertised": len(urls)}
+    for i, url in enumerate(urls, 1):
+        if url in state["done"]:
+            print(f"  [{i}/{len(urls)}] 이미 아카이브됨 — 건너뜀")
+            stats["skipped"] += 1
+            continue
+        try:
+            raw = fetcher.get(url)
+            parsed = post_parser.parse_post(raw, url)
+            print(f"  [{i}/{len(urls)}] {parsed['title'][:60]} | "
+                  f"date={parsed['published_date']} | imgs={parsed['image_count']} | "
+                  f"text={parsed['text_length']}ch")
+            if dry_run:
+                continue
+            archiver.archive_post(parsed, raw, key)
+            checkpoint.mark_done(state, url, parsed["content_hash"])
+            stats["archived"] += 1
+        except BlockedError:
+            raise
+        except (FetchError, post_parser.ParseError) as exc:
+            stats["failed"] += 1
+            print(f"  [FAIL] {url} -> {exc}")
+            if not dry_run:
+                archiver.record_failure(url, key, str(exc))
+                checkpoint.mark_failed(state, url, str(exc))
+    return stats
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="systrader79 blog crawler (M1)")
     ap.add_argument("--category", choices=[*config.CATEGORIES, "all"], default="all")
+    ap.add_argument("--urls", nargs="*", default=None,
+                    help="archive only these post URLs (skips listing collection). "
+                         "--category must name one category for the record.")
+    ap.add_argument("--from-shortlist", nargs="*", default=None,
+                    help="like --urls, but selects shortlist entries whose title "
+                         "contains one of these substrings")
     ap.add_argument("--limit", type=int, default=None,
                     help="max posts per category (validation runs)")
     ap.add_argument("--dry-run", action="store_true",
@@ -94,14 +147,29 @@ def main() -> int:
         except Exception:
             pass
 
+    urls = list(args.urls or [])
+    if args.from_shortlist:
+        picked = shortlist_urls(args.from_shortlist)
+        for title, _u in picked:
+            print(f"  선택: {title}")
+        if not picked:
+            print(f"[!] --from-shortlist {args.from_shortlist} 에 해당하는 글이 없습니다.")
+            return 1
+        urls += [u for _t, u in picked]
+
     keys = list(config.CATEGORIES) if args.category == "all" else [args.category]
     fetcher = Fetcher(delay=args.delay)
     state = checkpoint.load()
     started = time.time()
     summary = {}
     try:
-        for key in keys:
-            summary[key] = crawl_category(fetcher, key, args.limit, args.dry_run, state)
+        if urls:
+            key = args.category if args.category != "all" else "strategy"
+            summary["urls"] = crawl_urls(fetcher, urls, key, args.dry_run, state)
+        else:
+            for key in keys:
+                summary[key] = crawl_category(fetcher, key, args.limit,
+                                              args.dry_run, state)
     except BlockedError as exc:
         print(f"\n[ABORT] block signal — stopping immediately, no circumvention: {exc}")
         print("이 출력을 그대로 Claude에게 전달해 주세요.")

@@ -55,8 +55,11 @@ def main() -> int:
     for i, p in enumerate(shortlist, 1):
         rec = by_url.get(p["url"])
         txt_path = config.REPO_ROOT / rec["archived_txt"] if rec else None
-        if rec is None or not txt_path.exists():
-            missing.append(p["url"])
+        if rec is None:
+            missing.append((p["title"], "인덱스에 없음 (이 PC에 해당 글이 수집되지 않음)"))
+            continue
+        if not txt_path.exists():
+            missing.append((p["title"], f"본문 파일 없음: {txt_path}"))
             continue
         with open(txt_path, encoding="utf-8") as f:
             body = f.read()
@@ -81,8 +84,17 @@ def main() -> int:
         paths.append(path)
 
     print(f"bundled posts: {len(sections)}/{len(shortlist)} (missing: {len(missing)})")
-    for u in missing:
-        print(f"  missing: {u}")
+    for title, why in missing:
+        print(f"  missing: {title[:60]} — {why}")
+    if missing:
+        n = len(index)
+        print(f"\n  [진단] 아카이브 디렉터리: {config.ARCHIVE_DIR}")
+        print(f"         인덱스 레코드 {n}건"
+              + (" — 인덱스가 비어 있습니다. M1 크롤링을 실행한 PC가 아닐 수 있습니다."
+                 if n == 0 else ""))
+        print("         부족분만 다시 수집하려면(요청 간 2초, robots 준수):")
+        print('           python -m src.crawler.run --category strategy '
+              '--from-shortlist "<제목 일부>"')
     for path in paths:
         size = path.stat().st_size
         print(f"  wrote {path} ({size/1024:.0f} KB)")

@@ -111,3 +111,16 @@ def test_parse_post_raises_without_measured_selectors():
 
 def test_post_id_from_numeric_url():
     assert post_parser.post_id_from_url(f"{BASE}/1234") == "n1234"
+
+
+# ---------------------------------------------------------- M6 top-up selection
+def test_shortlist_urls_selects_exactly_the_named_posts():
+    """--from-shortlist must resolve to the two M6 posts and nothing else."""
+    from src.crawler.run import shortlist_urls
+    picked = shortlist_urls(["Larry Connors", "Defense First"])
+    assert len(picked) == 2
+    titles = " ".join(t for t, _ in picked)
+    assert "Larry Connors" in titles and "Defense First" in titles
+    for _t, url in picked:
+        assert url.startswith("https://stock79.tistory.com/entry/")
+    assert shortlist_urls(["존재하지 않는 제목"]) == []

@@ -1,8 +1,10 @@
 # STATE
 
 - 현재 마일스톤: **M6 — 배치 / 최종 리포트 (진행 중)**
-  - **다음 액션(사용자)**: C10·C12 원문 전달 (§미결 W16)
-    `python -m src.extractor.make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt`
+  - **다음 액션(사용자)**: C10·C12 원문 전달 (§미결 W16). 현재 PC에는 M1 아카이브가
+    없으므로(인덱스 0건 — M1은 회사 PC에서 실행) **두 글만 재수집 후 번들 생성**:
+    `python -m src.crawler.run --category strategy --from-shortlist "Larry Connors" "Defense First"`
+    → `python -m src.extractor.make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt`
     → `data/archive/m6_bundle.txt` 내용 전달 (저장소 커밋 금지)
   - 구현 완료: `src/validate/run_m6.py`(배치 + 발행후 보조 슬라이스 + 통합 판정표),
     `src/validate/strategies_m6.py`(C10·C12 삽입 지점), `make_bundle --match/--out`

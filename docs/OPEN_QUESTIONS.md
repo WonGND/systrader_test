@@ -85,7 +85,7 @@
 
 | # | 상태 | 질문 | 확정/권장안 |
 |---|---|---|---|
-| W16 | 대기 | **C10·C12 원문 전달 대기** — `python -m src.extractor.make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt` 실행 후 `data/archive/m6_bundle.txt` 내용 전달 (저장소 커밋 금지) |
+| W16 | 대기 | **C10·C12 원문 전달 대기.** 2026-08-31 시도 결과 현재 PC의 아카이브 인덱스 0건(M1은 다른 PC에서 실행) → 두 글만 재수집 필요: `python -m src.crawler.run --category strategy --from-shortlist "Larry Connors" "Defense First"` 후 `make_bundle --match ... --out m6_bundle.txt` |
 | (스펙 작성 중 발생 시 기록) | | | |
 
 ---
