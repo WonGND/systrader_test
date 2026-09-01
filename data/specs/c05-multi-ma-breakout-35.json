@@ -242,5 +242,19 @@
    "recommended_default": "원문 그대로 무리밸런싱",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.7029,
+  "oos_mdd": -0.126883,
+  "oos_cagr": 0.043375,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.092511,
+  "conditions_met": 2,
+  "oos_rebalance_count": 1635,
+  "verdict": "weak",
+  "caveats": [
+   "판정 근거 런 = c05 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

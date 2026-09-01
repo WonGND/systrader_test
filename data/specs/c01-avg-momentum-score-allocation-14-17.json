@@ -251,5 +251,21 @@
    "recommended_default": "next_open",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.8943,
+  "oos_mdd": -0.091439,
+  "oos_cagr": 0.040717,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.049203,
+  "conditions_met": 1,
+  "oos_rebalance_count": 92,
+  "verdict": "dead",
+  "caveats": [
+   "변형 런 c01_stock_bond: weak (OOS CAGR 4.72%, Sharpe 0.77)",
+   "변형 런 c01_zero_cash: weak (OOS CAGR 3.91%, Sharpe 0.91)",
+   "판정 근거 런 = c01 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

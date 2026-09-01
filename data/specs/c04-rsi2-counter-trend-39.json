@@ -227,5 +227,19 @@
   "in_sample_reproduction_applicable": true,
   "known_data_gaps": []
  },
- "open_questions": []
+ "open_questions": [],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.6527,
+  "oos_mdd": -0.093227,
+  "oos_cagr": 0.041776,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.12478,
+  "conditions_met": 2,
+  "oos_rebalance_count": 712,
+  "verdict": "weak",
+  "caveats": [
+   "판정 근거 런 = c04 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

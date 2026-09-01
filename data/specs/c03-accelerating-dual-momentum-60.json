@@ -238,5 +238,19 @@
    "recommended_default": "외부 공개 구현 수치와 정합성 확인",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.7385,
+  "oos_mdd": -0.248664,
+  "oos_cagr": 0.108222,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.195866,
+  "conditions_met": 2,
+  "oos_rebalance_count": 33,
+  "verdict": "weak",
+  "caveats": [
+   "판정 근거 런 = c03 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

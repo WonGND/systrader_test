@@ -7,7 +7,7 @@
   "category": "column_strategy",
   "published_at": "2025-07-28",
   "archived_path": "data/archive/posts/Defense-First-자산배분전략-방어-자산-모멘텀을-활용한-혁신적-동적-자산배분-전략.html",
-  "content_hash": "PENDING_LOCAL_INDEX",
+  "content_hash": "ccb6afadb21e7db2dbb533600cdccad35fb30f7e581d0acd9a82591bf8795177",
   "image_count": 8,
   "text_only_reproducible": true,
   "related_posts": []
@@ -296,5 +296,22 @@
    "recommended_default": "PDBC",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 1.4817,
+  "oos_mdd": -0.103715,
+  "oos_cagr": 0.166838,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.124598,
+  "conditions_met": 2,
+  "oos_rebalance_count": 92,
+  "verdict": "weak",
+  "caveats": [
+   "L-09 OOS 오염: 발행일 2025-07-28이 OOS 구간(2019-01-01~) 안이다. 저자가 해당 구간을 이미 보고 규칙을 정했을 수 있어 진정한 out-of-sample 증거가 아니다. 해석에서 할인할 것.",
+   "참고(판정 아님) 발행 이후 2025-08-28~2026-08-31: CAGR 29.18%, Sharpe 1.88, 리밸 13회 / 동일구간 SPY CAGR 19.34%",
+   "변형 런 c12_next_open: weak (OOS CAGR 16.71%, Sharpe 1.48)",
+   "판정 근거 런 = c12 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

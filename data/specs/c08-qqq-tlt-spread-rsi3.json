@@ -277,5 +277,21 @@
    "recommended_default": "100%",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.759,
+  "oos_mdd": -0.236668,
+  "oos_cagr": 0.126437,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.253743,
+  "conditions_met": 2,
+  "oos_rebalance_count": 210,
+  "verdict": "weak",
+  "caveats": [
+   "L-09 OOS 오염: 발행일 2024-10-21이 OOS 구간(2019-01-01~) 안이다. 저자가 해당 구간을 이미 보고 규칙을 정했을 수 있어 진정한 out-of-sample 증거가 아니다. 해석에서 할인할 것.",
+   "참고(판정 아님) 발행 이후 2024-11-21~2026-08-31: CAGR 2.01%, Sharpe 0.20, 리밸 42회 / 동일구간 SPY CAGR 16.71%",
+   "판정 근거 런 = c08 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

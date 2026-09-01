@@ -7,7 +7,7 @@
   "category": "column_strategy",
   "published_at": "2024-10-23",
   "archived_path": "data/archive/posts/Larry-Connors의-RSI2-역추세-전략.html",
-  "content_hash": "PENDING_LOCAL_INDEX",
+  "content_hash": "0ee2e995d0cd8df121d96de2c6a77b0cce564c1dd807373bcd2cd6f8fb0282ad",
   "image_count": 10,
   "text_only_reproducible": true,
   "related_posts": []
@@ -317,5 +317,22 @@
    "recommended_default": "제외",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.0147,
+  "oos_mdd": -0.11506,
+  "oos_cagr": -0.00044,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.090255,
+  "conditions_met": 1,
+  "oos_rebalance_count": 72,
+  "verdict": "dead",
+  "caveats": [
+   "L-09 OOS 오염: 발행일 2024-10-23이 OOS 구간(2019-01-01~) 안이다. 저자가 해당 구간을 이미 보고 규칙을 정했을 수 있어 진정한 out-of-sample 증거가 아니다. 해석에서 할인할 것.",
+   "참고(판정 아님) 발행 이후 2024-11-25~2026-08-31: CAGR 0.89%, Sharpe 0.20, 리밸 20회 / 동일구간 SPY CAGR 16.26%",
+   "변형 런 c10_qqq: dead (OOS CAGR 1.40%, Sharpe 0.26)",
+   "판정 근거 런 = c10_spy (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

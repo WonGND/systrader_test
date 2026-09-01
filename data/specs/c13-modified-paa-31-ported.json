@@ -283,5 +283,20 @@
    "recommended_default": "month-end",
    "blocking": false
   }
- ]
+ ],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.661,
+  "oos_mdd": -0.10626,
+  "oos_cagr": 0.042556,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.100115,
+  "conditions_met": 2,
+  "oos_rebalance_count": 72,
+  "verdict": "weak",
+  "caveats": [
+   "변형 런 c13_score_safe: weak (OOS CAGR 4.45%, Sharpe 0.71)",
+   "판정 근거 런 = c13 (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }

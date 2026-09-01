@@ -251,5 +251,23 @@
    "DBC 상장 2006-02 — 올웨더 변형의 백테스트 시작일 제약"
   ]
  },
- "open_questions": []
+ "open_questions": [],
+ "judgment_result": {
+  "criteria_version": "1.0",
+  "oos_sharpe": 0.885,
+  "oos_mdd": -0.178744,
+  "oos_cagr": 0.067727,
+  "benchmark_cagr": 0.17528,
+  "in_sample_mdd_reference": -0.122408,
+  "conditions_met": 2,
+  "oos_rebalance_count": 92,
+  "verdict": "weak",
+  "caveats": [
+   "L-09 OOS 오염: 발행일 2020-02-27이 OOS 구간(2019-01-01~) 안이다. 저자가 해당 구간을 이미 보고 규칙을 정했을 수 있어 진정한 out-of-sample 증거가 아니다. 해석에서 할인할 것.",
+   "참고(판정 아님) 발행 이후 2020-03-27~2026-08-31: CAGR 5.54%, Sharpe 0.75, 리밸 77회 / 동일구간 SPY CAGR 20.20%",
+   "변형 런 c02_allweather: weak (OOS CAGR 5.60%, Sharpe 0.97)",
+   "변형 런 c02_permanent_zero_cash: weak (OOS CAGR 6.81%, Sharpe 1.06)",
+   "판정 근거 런 = c02_permanent (원문 규칙 그대로 구현한 런)"
+  ]
+ }
 }
