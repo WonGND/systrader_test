@@ -30,6 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.backtest import data, settings  # noqa: E402
 from src.validate import run_m5 as M5  # noqa: E402
 from src.validate import strategies_m6 as S  # noqa: E402
+from src.validate import tee  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 FETCH_START = "2000-01-01"
@@ -59,12 +60,11 @@ def _contaminated(pub: pd.Timestamp | None) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", default=None, help="also write results to this JSON path")
+    ap.add_argument("--out", default=None,
+                    help="write the console report to this file as UTF-8 "
+                         "(do NOT pipe through Tee-Object — that mangles Korean)")
     args = ap.parse_args()
-    if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
-        try:
-            sys.stdout.reconfigure(encoding="utf-8")
-        except Exception:
-            pass
+    close_out = tee.start(args.out)
 
     comm, slip = settings.costs()
     fetch_end = (pd.Timestamp.today().normalize() + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
@@ -178,7 +178,10 @@ def main() -> int:
         with open(args.json, "w", encoding="utf-8") as f:
             json.dump(payload, f, ensure_ascii=False, indent=1, default=str)
         print(f"\n[saved] {args.json}")
+    if args.out:
+        print(f"[saved] {args.out} (UTF-8)")
     print("\n>>> 위 출력 전체를 Claude에게 전달해 주세요. <<<")
+    close_out()
     return 0
 
 

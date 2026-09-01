@@ -1,18 +1,19 @@
 # STATE
 
-- 현재 마일스톤: **M6 — 배치 / 최종 리포트 (진행 중)**
-  - **다음 액션(사용자)**: 로컬 3종 실행 후 출력 전달 (§미결 W17)
-    ① `python -m src.extractor.fill_spec_meta` ② `python -m src.extractor.verify_quotes --spec c10 c12`
-    ③ `python -m src.validate.run_m6 --json reports\m6_results.json`
-  - 스펙 2건 작성 완료: `c10-connors-rsi2-simple`(2024-10-23), `c12-defense-first-taa`(2025-07-28)
-    — 스키마 0오류, 인용 각 23건, **둘 다 L-09(OOS 오염) 해당**
-  - 빌더 4개 추가: c10_spy, c10_qqq, c12(종가 체결), c12_next_open(대조판) → 배치 **21런**
-    - C10: TQQQ판 제외(레버리지 금지군), 개별주 확장판 제외(point-in-time 부재)
-    - C12: PDBC 상장 2014-02 → 인샘플 약 4년(월 신호 <60회). 기준 (2) 기준값 불안정
-  - 구현 완료: `run_m6.py`(배치 + 발행후 보조 슬라이스 + 통합 판정표),
-    `verify_quotes.py`(인용 기계 대조, 로컬 실행), `make_bundle --match/--out`,
-    크롤러 `--urls/--from-shortlist`(다른 PC에서 부족분만 수집)
-  - 남은 작업: 로컬 배치 실행 → `reports/M6_final_report.md` → 최종 게이트 승인
+- 현재 마일스톤: **M6 — 최종 보고서 제출 / 사용자 승인 대기 (프로젝트 마지막 게이트)**
+  - 보고서: `reports/M6_final_report.md` (미결 Q20~Q23)
+  - **최종 결과: alive 0 / weak 16 / dead 5 (21런, 12전략)**
+    - 21런 **전부** 기준 (3) OOS CAGR ≥ SPY 탈락 (SPY OOS 17.53%). 최근접 c12 16.68%
+    - (1) Sharpe≥0.5 16/21, (2) MDD≤인샘플×1.5 18/21 → "무너지진 않았으나 지수를 못 이김"
+    - 위험조정: SPY Sharpe(0.94) 초과 4런(c12 1.48, c06 1.19, c02_perm_zc 1.06, c02_aw 0.97),
+      **21런 전부 SPY보다 낙폭 얕음** (보조 정보, 판정 불변)
+    - **진짜 사망 3전략**: C7(계절성, 발행후 -2.73%), C10(Connors 단순판, OOS -0.04%),
+      C9 SPY판. c01의 dead는 기준 (2)만 미달한 다른 성격
+    - **L-09 핵심**: 12전략 중 7건이 발행일 OOS 안. 깨끗한 5건(C1/C3/C4/C5/C13)만 봐도 결론 동일
+    - C12는 수치 1위(OOS Sharpe 1.48)지만 발행 2025-07 + 인샘플 3.1년/Sharpe 0.31 →
+      증거 가치는 최하 (사후 선택 편향 전형)
+  - 인용 대조 누적 227건(M2 181 + M6 46) 전부 기계 검증 통과, 테스트 99/99
+  - 한글 깨짐(Tee-Object 파이프 인코딩) → 러너 `--out` 옵션으로 UTF-8 직접 기록하도록 수정
 - M5: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q13~Q16 전부 권장안 확정.
   보고서: `reports/M5_oos_validation.md`
   - **결과: alive 0 / weak 14 / dead 3 / insufficient_sample 0 (17런)**
@@ -58,7 +59,7 @@
 - **10개 확정(2026-08-26)**: C1~C9+C13, Q7/Q8 승인 → 스펙 JSON 10건 생성 완료
   (`data/specs/c*.json`, 인용 181건 원문 기계 대조, 스키마 검증 0오류)
 - (M2 이력) 게이트 종결 완료 — 위 참조
-- 최종 갱신: 2026-08-31 (M6 착수)
+- 최종 갱신: 2026-08-31 (M6 보고서 제출)
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
 - robots.txt: 크롤링 **허용** (/guestbook, /manage, /search 등만 불허)
@@ -89,7 +90,8 @@
 - [x] M1~M5 게이트 전부 승인 종결 (M1·M2·M3 2026-08-26, M4·M5 2026-08-31)
 - [x] M6 배치 러너 구현 (`run_m6.py`, 발행후 보조 슬라이스 + 통합 판정표)
 - [x] C10·C12 스펙 작성 (스키마 0오류, 인용 46건 — 로컬 기계 대조 대기)
-- [ ] M6 배치 로컬 실행 → `reports/M6_final_report.md` → 최종 게이트 승인
+- [x] M6 배치 로컬 실행(21런) → `reports/M6_final_report.md` 작성
+- [ ] **M6 최종 게이트 승인 대기** (Q20~Q23)
 
 ## 블로커
 
@@ -127,13 +129,15 @@
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
 ## 미결
-- **W17: 로컬 3종 실행 출력 대기** (fill_spec_meta / verify_quotes / run_m6)
+- **Q20~Q23 (`docs/OPEN_QUESTIONS.md` M6 절): 최종 게이트 승인 대기**
+- 사용자 로컬에서 `git add data/specs ; git commit ; git push` 필요
+  (fill_spec_meta가 채운 c10·c12 content_hash가 아직 원격에 반영되지 않음)
 - C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, M4 보고서 §4)
 - 미정독 코스닥 계열 14건 `unclassified_out_of_scope` (Q15로 범위 밖 확정, 공시 완료)
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. 사용자가 전달한 **M6 배치 출력**과 **인용 대조 결과**가 있는지 확인한다.
-3. 인용 불일치가 있으면 해당 스펙 값을 무효 처리하고 먼저 수정한다(§1-2).
-4. 배치 출력 수신 후 `reports/M6_final_report.md` 작성 —
-   통합 판정표 + 전략별 1페이지 + 가정값 전수 + 한계(L-01·L-06~L-09) → 최종 게이트 승인 요청.
+2. **M6 최종 게이트 승인 여부를 확인한다.** 승인 시 Q21에 따라 각 스펙의
+   `judgment_result`를 `reports/m6_results.json`에서 충전하고(로컬 실행) 프로젝트를 종료한다.
+3. 재실행이 필요하면 `.\scripts\run_local.ps1` 한 줄로 전체 파이프라인이 돈다.
+4. 새 전략 추가는 스펙 JSON 1건 + `strategies_m6.PENDING_BUILDERS`에 빌더 1개로 확장된다.
