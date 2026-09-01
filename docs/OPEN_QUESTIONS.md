@@ -83,6 +83,9 @@
 
 ## M6 — 배치 / 최종 리포트
 
+전문은 `reports/M6_final_report.md` §7.
+**2026-08-31 사용자 답변 "추천대로"로 Q20~Q23 전부 권장안 확정 — 프로젝트 종료.**
+
 | # | 상태 | 질문 | 확정/권장안 |
 |---|---|---|---|
 | W16 | resolved | C10·C12 원문 수신(2026-08-31). 두 글만 재수집 후 번들 전달 — 다른 PC에는 M1 아카이브가 없어 `--from-shortlist` 경로 신설 |
@@ -90,10 +93,10 @@
 | Q17 | resolved | C12 체결 규약 | 종가·익일 시가 **둘 다 실행 → 차이 0.03%p로 무의미** |
 | Q18 | resolved | C12 BIL 기준값 산출 | 동일 산식(1·3·6·12개월 평균) 적용 |
 | Q19 | resolved | C10 QQQ판 기준 가격 | 각 ETF 자체 가격 기준 |
-| Q20 | blocking | 최종 판정을 §7 v1.0 그대로 확정 | **확정.** Q13 결정 유지 — 결과를 본 뒤 기준 변경은 사후 합리화 |
-| Q21 | blocking | 판정 결과를 스펙 `judgment_result`에 기록 | **기록.** 승인 후 m6_results.json에서 충전(로컬 실행) |
-| Q22 | blocking | 오염 강한 전략 별도 표시 | **표의 오염 열 유지 + caveats에 L-09 문구** |
-| Q23 | blocking | 프로젝트 종료 처리 | **M6 승인 시 종료.** 재실행은 run_local.ps1, 확장은 스펙+빌더 각 1건 |
+| Q20 | resolved | 최종 판정을 §7 v1.0 그대로 확정 | **확정.** alive 0 / weak 16 / dead 5 |
+| Q21 | resolved | 판정 결과를 스펙 `judgment_result`에 기록 | **기록.** `src/extractor/fill_judgment.py`로 배치 JSON에서 자동 충전 |
+| Q22 | resolved | 오염 강한 전략 별도 표시 | **오염 열 유지 + caveats에 L-09 문구 자동 삽입** |
+| Q23 | resolved | 프로젝트 종료 처리 | **M6 승인으로 종료.** 재실행 `run_local.ps1`, 확장은 스펙+빌더 각 1건 |
 
 ---
 

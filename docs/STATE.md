@@ -1,19 +1,31 @@
 # STATE
 
-- 현재 마일스톤: **M6 — 최종 보고서 제출 / 사용자 승인 대기 (프로젝트 마지막 게이트)**
-  - 보고서: `reports/M6_final_report.md` (미결 Q20~Q23)
-  - **최종 결과: alive 0 / weak 16 / dead 5 (21런, 12전략)**
-    - 21런 **전부** 기준 (3) OOS CAGR ≥ SPY 탈락 (SPY OOS 17.53%). 최근접 c12 16.68%
-    - (1) Sharpe≥0.5 16/21, (2) MDD≤인샘플×1.5 18/21 → "무너지진 않았으나 지수를 못 이김"
-    - 위험조정: SPY Sharpe(0.94) 초과 4런(c12 1.48, c06 1.19, c02_perm_zc 1.06, c02_aw 0.97),
-      **21런 전부 SPY보다 낙폭 얕음** (보조 정보, 판정 불변)
-    - **진짜 사망 3전략**: C7(계절성, 발행후 -2.73%), C10(Connors 단순판, OOS -0.04%),
-      C9 SPY판. c01의 dead는 기준 (2)만 미달한 다른 성격
-    - **L-09 핵심**: 12전략 중 7건이 발행일 OOS 안. 깨끗한 5건(C1/C3/C4/C5/C13)만 봐도 결론 동일
-    - C12는 수치 1위(OOS Sharpe 1.48)지만 발행 2025-07 + 인샘플 3.1년/Sharpe 0.31 →
-      증거 가치는 최하 (사후 선택 편향 전형)
-  - 인용 대조 누적 227건(M2 181 + M6 46) 전부 기계 검증 통과, 테스트 99/99
-  - 한글 깨짐(Tee-Object 파이프 인코딩) → 러너 `--out` 옵션으로 UTF-8 직접 기록하도록 수정
+- **프로젝트 종료 (2026-08-31). M1~M6 전 게이트 승인 종결.**
+  최종 보고서: `reports/M6_final_report.md`
+
+## 최종 결과 요약
+- **alive 0 / weak 16 / dead 5** (21런, 12전략). 판정 기준 §7 **v1.0**, 비용반영 일간
+- 21런 **전부** 기준 (3) OOS CAGR ≥ SPY 탈락 (OOS SPY CAGR 17.53%). 최근접 c12 16.68%
+- (1) Sharpe≥0.5 16/21, (2) MDD≤인샘플×1.5 18/21 → "무너지진 않았으나 지수를 못 이김"
+- 위험조정 보조: SPY Sharpe(0.94) 초과 4런, **21런 전부 SPY보다 낙폭 얕음** (판정 불변)
+- **진짜 사망 3전략**: C7(계절성, 발행후 -2.73%), C10(Connors 단순판, OOS -0.04%),
+  C9 SPY판. c01의 dead는 기준 (2)만 미달한 다른 성격
+- **L-09(OOS 오염)**: 12전략 중 7건이 발행일 OOS 안. 깨끗한 5건(C1/C3/C4/C5/C13)만 봐도 결론 동일
+- C12는 수치 1위(OOS Sharpe 1.48)지만 발행 2025-07 + 인샘플 3.1년/Sharpe 0.31 →
+  증거 가치 최하 (사후 선택 편향 전형)
+
+## 재현·확장 방법 (다음 세션 / 다음 사람)
+1. 전체 파이프라인 재실행: `.\scripts\run_local.ps1` (기본 M5, `-Task m4`로 M4)
+   또는 `python -m src.validate.run_m6 --json reports\m6_results.json --out reports\m6_output.txt`
+2. 인용 재검증: `python -m src.extractor.verify_quotes` (아카이브가 있는 PC에서)
+3. 판정 재기록: `python -m src.extractor.fill_judgment`
+4. **새 전략 추가**: ① 원문 수집(`run --from-shortlist "제목 일부"`)
+   ② 스펙 JSON 1건 작성(모든 값에 인용) ③ `strategies_m6.PENDING_BUILDERS`에 빌더 1개
+   ④ `fill_judgment.PRIMARY_RUN`에 본안 런 지정 ⑤ 배치 재실행
+5. 콘솔 한글이 깨지면 `[Console]::OutputEncoding = [Text.Encoding]::UTF8`
+   (`--out` 파일은 항상 UTF-8로 정상 기록된다)
+
+## 마일스톤 이력
 - M5: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q13~Q16 전부 권장안 확정.
   보고서: `reports/M5_oos_validation.md`
   - **결과: alive 0 / weak 14 / dead 3 / insufficient_sample 0 (17런)**
@@ -59,7 +71,7 @@
 - **10개 확정(2026-08-26)**: C1~C9+C13, Q7/Q8 승인 → 스펙 JSON 10건 생성 완료
   (`data/specs/c*.json`, 인용 181건 원문 기계 대조, 스키마 검증 0오류)
 - (M2 이력) 게이트 종결 완료 — 위 참조
-- 최종 갱신: 2026-08-31 (M6 보고서 제출)
+- 최종 갱신: 2026-08-31 (프로젝트 종료)
 
 ## STEP 3 구조 조사 — 완료 (2026-08-26 로컬 탐침 실측)
 - robots.txt: 크롤링 **허용** (/guestbook, /manage, /search 등만 불허)
@@ -91,7 +103,8 @@
 - [x] M6 배치 러너 구현 (`run_m6.py`, 발행후 보조 슬라이스 + 통합 판정표)
 - [x] C10·C12 스펙 작성 (스키마 0오류, 인용 46건 — 로컬 기계 대조 대기)
 - [x] M6 배치 로컬 실행(21런) → `reports/M6_final_report.md` 작성
-- [ ] **M6 최종 게이트 승인 대기** (Q20~Q23)
+- [x] **M6 최종 게이트 승인 종결 (2026-08-31, "추천대로") — 프로젝트 종료**
+- [ ] (사용자 로컬 잔여) `fill_spec_meta` + `fill_judgment` 결과 커밋·푸시
 
 ## 블로커
 
@@ -128,16 +141,12 @@
 - M4 재현 대상: Track A만. Track A < 3개면 축소 실행 + 보조 대조군(사용자 확인)
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
-## 미결
-- **Q20~Q23 (`docs/OPEN_QUESTIONS.md` M6 절): 최종 게이트 승인 대기**
-- 사용자 로컬에서 `git add data/specs ; git commit ; git push` 필요
-  (fill_spec_meta가 채운 c10·c12 content_hash가 아직 원격에 반영되지 않음)
+## 미결 (프로젝트 본체는 종료, 아래는 사용자 로컬 잔여 작업)
+- `fill_spec_meta`(c10·c12 content_hash) + `fill_judgment`(12건 judgment_result)
+  실행 결과를 `git add data/specs ; git commit ; git push`
 - C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, M4 보고서 §4)
 - 미정독 코스닥 계열 14건 `unclassified_out_of_scope` (Q15로 범위 밖 확정, 공시 완료)
 
 ## 다음 세션이 할 일
-1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. **M6 최종 게이트 승인 여부를 확인한다.** 승인 시 Q21에 따라 각 스펙의
-   `judgment_result`를 `reports/m6_results.json`에서 충전하고(로컬 실행) 프로젝트를 종료한다.
-3. 재실행이 필요하면 `.\scripts\run_local.ps1` 한 줄로 전체 파이프라인이 돈다.
-4. 새 전략 추가는 스펙 JSON 1건 + `strategies_m6.PENDING_BUILDERS`에 빌더 1개로 확장된다.
+프로젝트는 종료 상태다. 새 작업 지시가 없으면 위 "재현·확장 방법"만 참조하면 된다.
+사용자가 재개를 지시하면 `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
