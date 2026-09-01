@@ -1,0 +1,300 @@
+{
+ "spec_id": "c12-defense-first-taa",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/Defense-First-%EC%9E%90%EC%82%B0%EB%B0%B0%EB%B6%84%EC%A0%84%EB%9E%B5-%EB%B0%A9%EC%96%B4-%EC%9E%90%EC%82%B0-%EB%AA%A8%EB%A9%98%ED%85%80%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%98%81%EC%8B%A0%EC%A0%81-%EB%8F%99%EC%A0%81-%EC%9E%90%EC%82%B0%EB%B0%B0%EB%B6%84-%EC%A0%84%EB%9E%B5",
+  "post_title": "\"Defense First\" 자산배분전략 : 방어 자산 모멘텀을 활용한 혁신적 동적 자산배분 전략",
+  "category": "column_strategy",
+  "published_at": "2025-07-28",
+  "archived_path": "data/archive/posts/Defense-First-자산배분전략-방어-자산-모멘텀을-활용한-혁신적-동적-자산배분-전략.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 8,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "원문이 미국 ETF(TLT/GLD/PDBC/UUP/SPY/BIL)를 직접 지정한다",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-31 M5 게이트 Q15 승인 (C12 추가)",
+   "규칙 5단계가 텍스트로 완전 명시되고 계산 예시까지 제공됨",
+   "원문이 제안한 개선안(주식 모멘텀 2차 필터, UUP→현금 대체)은 저자의 수정 제안이므로 재현 대상에서 제외 — 원문 규칙 그대로만 구현"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": false
+ },
+ "strategy": {
+  "name": {
+   "value": "Defense First (방어자산 모멘텀 기반 전술적 자산배분)",
+   "source_quote": "\"Defense First\" 전략은 이름 그대로",
+   "source_locator": "H1:도입부",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "방어자산의 모멘텀이 약해지면 그 비중을 주식으로 전환하는 역발상 TAA",
+   "source_quote": "미국 장기 국채, 금, 원자재, 달러와 같은 '방어 자산'들의 모멘텀을 관찰하여 포트폴리오의 위험 수위를 조절",
+   "source_locator": "H1:도입부",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "asset_allocation",
+   "source_quote": "이 전략은 매월 말, 단 한 번의 리밸런싱을 통해 다음 한 달간의 포트폴리오를 결정하며, 그 과정은 다음과 같은 명확한 단계로 이루어집니다.",
+   "source_locator": "H2:전략의 구체적인 규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (장기국채·금·원자재·달러·주식·단기국채)",
+   "source_quote": "매월 마지막 거래일 종가 기준으로, 4개의 방어 자산(TLT, GLD, PDBC, UUP) 각각의 모멘텀 점수를 계산합니다.",
+   "source_locator": "H2:전략의 구체적인 규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "해당 방어 자산에 배분되었던 자금(예: 1위 자산이었다면 40%)은 미국 주식 ETF인 SPY로 전환하여 투자",
+   "source_locator": "H2:전략의 구체적인 규칙",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": "방어 4종(TLT, GLD, PDBC, UUP) + 위험 1종(SPY) + 무위험 기준(BIL)",
+    "source_quote": "매월 마지막 거래일 종가 기준으로, 4개의 방어 자산(TLT, GLD, PDBC, UUP) 각각의 모멘텀 점수를 계산합니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "filters": {
+    "value": "절대 모멘텀 필터 — 방어자산 모멘텀 < BIL 기준이면 해당 비중을 SPY로 전환",
+    "source_quote": "이제 각 방어 자산의 모멘텀 점수를 '무위험 수익률'과 비교하는 절대 모멘텀 필터를 적용합니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "position_count": {
+    "value": 4,
+    "source_quote": "계산된 모멘텀 점수를 기준으로 4개의 방어 자산의 순위를 1위부터 4위까지 매깁니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "원문 언급 없음. 고정 ETF 6종만 사용하므로 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "TLT",
+    "GLD",
+    "PDBC",
+    "UUP",
+    "SPY",
+    "BIL"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "모멘텀 순위 1~4위에 40/30/20/10% 차등 배분",
+      "source_quote": "가장 모멘텀이 강한 1위 자산에 포트폴리오의 40%를, 2위 자산에 30%, 3위 자산에 20%, 그리고 가장 약한 4위 자산에 10%를 배분",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "1·3·6·12개월 수익률의 산술평균",
+      "source_quote": "과거 1개월, 3개월, 6개월, 12개월 수익률의 평균값",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "1, 3, 6, 12 months",
+      "source_quote": "과거 1개월, 3개월, 6개월, 12개월 수익률의 평균값",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": "BIL 기준 무위험 수익률",
+      "source_quote": "여기서 무위험 수익률의 대용치로는 13주 만기 미국 국채(BIL)의 수익률을 사용합니다.",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "medium",
+      "assumption_needed": true,
+      "question_for_user": "'BIL의 수익률'을 방어자산과 동일한 산식(1·3·6·12개월 수익률 평균)으로 계산해 비교해도 되는지? 원문은 비교 대상만 지정하고 산출 방식을 명시하지 않았다."
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "방어자산 모멘텀이 무위험 수익률보다 낮으면 그 비중 전액을 SPY로 전환",
+      "source_quote": "해당 방어 자산에 배분되었던 자금(예: 1위 자산이었다면 40%)은 미국 주식 ETF인 SPY로 전환하여 투자",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "절대 모멘텀 (방어자산 모멘텀 vs BIL)",
+      "source_quote": "만약 4개의 방어 자산 모두가 무위험 수익률보다 낮은 최악의 상황이라면, 포트폴리오의 100%가 SPY에 투자됩니다.",
+      "source_locator": "H2:전략의 구체적인 규칙",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": "월말 종가 신호 → 같은 날 종가 체결로 해석",
+    "source_quote": "매월 마지막 거래일에 월 1회 실행",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "medium",
+    "assumption_needed": true,
+    "question_for_user": "원문은 '매월 마지막 거래일 종가 기준 계산 / 마지막 거래일 실행'만 밝힌다. 종가 체결(MOC)을 본안으로 하고 익일 시가 체결을 민감도로 병기해도 되는지?"
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": "모멘텀 순위 기반 차등 배분 (40/30/20/10), 항상 100% 투자",
+    "source_quote": "최종 포트폴리오는 TLT 40%, SPY 40%(30%+10%), UUP 20%가 되는 것입니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "cash_handling": {
+    "value": "현금 보유 없음 — 약한 방어자산 비중은 SPY로 이동",
+    "source_quote": "만약 4개의 방어 자산 모두가 무위험 수익률보다 낮은 최악의 상황이라면, 포트폴리오의 100%가 SPY에 투자됩니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "monthly",
+    "source_quote": "매월 마지막 거래일에 월 1회 실행",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "매월 마지막 거래일 종가 기준",
+    "source_quote": "매월 마지막 거래일 종가 기준으로, 4개의 방어 자산(TLT, GLD, PDBC, UUP) 각각의 모멘텀 점수를 계산합니다.",
+    "source_locator": "H2:전략의 구체적인 규칙",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "risk_controls": {
+   "market_filter": {
+    "value": "없음 — 주식 전환 시 주식 자체의 추세를 보지 않는다 (원문이 스스로 약점으로 지적)",
+    "source_quote": "이 전략의 가장 심각하고 명백한 약점은 바로 '주식 시장의 상태를 전혀 고려하지 않고 맹목적으로 주식을 매수한다'는 점입니다.",
+    "source_locator": "H2:단점",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "costs_assumed_in_post": {
+   "slippage": {
+    "value": "왕복 0.2% (편도 0.1%, 수수료+슬리피지 합산) — 원문이 인용한 Allocate Smartly 백테스트 기준",
+    "source_quote": "Allocate Smartly의 백테스트는 매수/매도 시 각각 0.1%, 즉 왕복 0.2%의 거래 비용(수수료+슬리피지)을 가정하는데",
+    "source_locator": "H2:실용적 문제",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "period_start": {
+   "value": "1971",
+   "source_quote": "1971년부터 2025년 현재까지 약 50년이 넘는 기간 동안의 백테스트를 통해 그 유효성을 검증받았습니다.",
+   "source_locator": "H2:백테스트 결과 및 성과 분석",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "cagr": {
+   "value": null,
+   "source_quote": null,
+   "source_locator": null,
+   "confidence": "none",
+   "assumption_needed": true,
+   "question_for_user": "원문은 정량 수치를 그래프(이미지)로만 제시하고 텍스트로는 '벤치마크와 유사한 수익률'이라는 정성 서술만 남긴다. 정성 대조로만 진행해도 되는지?"
+  },
+  "other_metrics": {
+   "value": "정성 서술만: S&P500과 유사한 수익률 + 위기 구간 우수한 하방 경직성. UUP의 연평균 수익 기여도는 0.06%",
+   "source_quote": "벤치마크(S&P 500)와 유사한 수준의 수익률을 기록하면서도, 시장의 폭락기에는 훨씬 뛰어난 방어력을 보여주었다",
+   "source_locator": "H2:역사적 성과 개요",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": [
+   "PDBC 상장 2014-02 → 유니버스 공통 시작일이 2014년 이후로 밀리고, 12개월 모멘텀 확보까지 더해 인샘플이 약 4년에 그친다. 판정 기준 (2)의 인샘플 MDD 기준값이 다른 전략보다 불안정하다",
+   "원문 백테스트(1971~2025)는 ETF 상장 이전 구간을 지수 프록시로 대체한 것으로 보이나 본 프로젝트는 프록시 대체를 금지한다(§4) → 기간 재현 불가",
+   "발행 2025-07-28 → OOS 구간 전체가 저자에게 기지(旣知) 구간. L-09(OOS 오염)가 가장 강하게 적용된다. 발행 이후 구간은 약 1.1년으로 보조 참고도 표본 부족",
+   "원문 본문은 방어자산을 한 곳에서는 DBC(원자재), 규칙 표에서는 PDBC로 표기한다. 규칙 서술을 따라 PDBC를 채택했다"
+  ]
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.signals.entry.threshold",
+   "question": "BIL 기준값을 방어자산과 동일한 1·3·6·12개월 평균 산식으로 계산",
+   "recommended_default": "동일 산식 적용",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.signals.signal_to_execution_lag",
+   "question": "월말 종가 체결을 본안으로, 익일 시가 체결을 민감도로 병기",
+   "recommended_default": "close (본안) + next_open (민감도)",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.universe.resolved_tickers",
+   "question": "원자재 ETF 표기가 DBC/PDBC로 혼재 — 규칙 서술의 PDBC 채택",
+   "recommended_default": "PDBC",
+   "blocking": false
+  }
+ ]
+}

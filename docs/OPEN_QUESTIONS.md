@@ -85,8 +85,11 @@
 
 | # | 상태 | 질문 | 확정/권장안 |
 |---|---|---|---|
-| W16 | 대기 | **C10·C12 원문 전달 대기.** 2026-08-31 시도 결과 현재 PC의 아카이브 인덱스 0건(M1은 다른 PC에서 실행) → 두 글만 재수집 필요: `python -m src.crawler.run --category strategy --from-shortlist "Larry Connors" "Defense First"` 후 `make_bundle --match ... --out m6_bundle.txt` |
-| (스펙 작성 중 발생 시 기록) | | | |
+| W16 | resolved | C10·C12 원문 수신(2026-08-31). 두 글만 재수집 후 번들 전달 — 다른 PC에는 M1 아카이브가 없어 `--from-shortlist` 경로 신설 |
+| W17 | 대기 | **로컬 실행 3종 출력 대기**: ① `fill_spec_meta`(content_hash 충전) ② `verify_quotes --spec c10 c12`(인용 기계 대조) ③ `run_m6 --json reports/m6_results.json`(21런 배치) |
+| Q17 | non-blocking | C12 체결 규약 — 원문은 "매월 마지막 거래일에 월 1회 실행"만 명시 | **종가 체결을 본안, 익일 시가를 대조판으로 병기** (두 런 모두 출력) |
+| Q18 | non-blocking | C12의 BIL 기준값 산출 방식 미명시 | **방어자산과 동일한 1·3·6·12개월 평균 산식 적용** |
+| Q19 | non-blocking | C10 QQQ판의 200일선·RSI 기준 가격 (원문은 규칙을 S&P500 기준으로 서술) | **각 ETF 자체 가격 기준** |
 
 ---
 

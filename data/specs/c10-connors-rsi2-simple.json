@@ -1,0 +1,321 @@
+{
+ "spec_id": "c10-connors-rsi2-simple",
+ "schema_version": "1.1",
+ "source": {
+  "post_url": "https://stock79.tistory.com/entry/Larry-Connors%EC%9D%98-RSI2-%EC%97%AD%EC%B6%94%EC%84%B8-%EC%A0%84%EB%9E%B5",
+  "post_title": "Larry Connors의 RSI(2) 역추세 전략",
+  "category": "column_strategy",
+  "published_at": "2024-10-23",
+  "archived_path": "data/archive/posts/Larry-Connors의-RSI2-역추세-전략.html",
+  "content_hash": "PENDING_LOCAL_INDEX",
+  "image_count": 10,
+  "text_only_reproducible": true,
+  "related_posts": []
+ },
+ "scope": {
+  "track": "native_overseas",
+  "track_reason": "원문이 미국 ETF(SPY/QQQ/TQQQ)와 미국 주식을 직접 대상으로 삼는다",
+  "survivorship_risk": "low",
+  "m4_reproduction_eligible": true
+ },
+ "review_status": {
+  "status": "ready_for_backtest",
+  "reasons": [
+   "2026-08-31 M5 게이트 Q15 승인 (C10 추가)",
+   "재현 대상은 단순판(단일 ETF)만. 개별주 확장판(10슬롯/대형주/2포지션 버전)은 point-in-time 구성종목 부재로 생존편향 제거 불가 → 제외",
+   "TQQQ 적용판은 화이트리스트 requires_user_approval(leveraged_or_inverse)이라 제외 (C8 레버리지판과 동일 처리)"
+  ],
+  "blocking_questions": [],
+  "reviewed_by_human": false
+ },
+ "strategy": {
+  "name": {
+   "value": "Larry Connors RSI(2) 역추세 — 단순판(단일 ETF)",
+   "source_quote": "Larry Connors의 RSI(2) 역추세 전략",
+   "source_locator": "title",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "core_idea": {
+   "value": "장기 상승추세(200일선 위)에서 2일 RSI가 극단적으로 낮을 때 매수하는 단기 평균회귀",
+   "source_quote": "이 전략의 핵심은 극단적으로 낮은 2일 RSI 값(5 미만)을 주식 매수의 신호로 사용한다는 점입니다.",
+   "source_locator": "H2:전략의 기본 아이디어와 배경",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "strategy_type": {
+   "value": "mean_reversion",
+   "source_quote": "기간을 크게 줄인 2일 RSI를 사용하면 놀랍도록 인상적인 결과를 얻을 수 있다고 합니다.",
+   "source_locator": "H2:전략의 기본 아이디어와 배경",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "asset_class": {
+   "value": "US ETF (SPY, QQQ)",
+   "source_quote": "이 전략을 SPY, QQQ(나스닥 100 ETF), TQQQ(QQQ의 3배 레버리지 ETF)에 적용하여 실험한 결과는 다음과 같습니다:",
+   "source_locator": "H2:단순 전략 실험",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "market_in_post": {
+   "value": "US",
+   "source_quote": "SPY(S&P 500 ETF)가 200일 이동평균선 위에 있을 때 (강세장 조건)",
+   "source_locator": "H2:단순 전략 실험",
+   "confidence": "high",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "universe": {
+   "selection_rule": {
+    "value": "단일 ETF 롱/플랫. 재현 대상은 SPY와 QQQ 두 가지 적용판",
+    "source_quote": "이 전략을 SPY, QQQ(나스닥 100 ETF), TQQQ(QQQ의 3배 레버리지 ETF)에 적용하여 실험한 결과는 다음과 같습니다:",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "filters": {
+    "value": "장기 추세 필터: 200일 이동평균선 위에서만 진입",
+    "source_quote": "SPY(S&P 500 ETF)가 200일 이동평균선 위에 있을 때 (강세장 조건)",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "position_count": {
+    "value": 1,
+    "source_quote": "다음 날 시가에 SPY를 매수",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "delisting_handling": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "단순판은 ETF 1종만 보유하므로 상장폐지 처리가 불필요하다. 엔진 기본 동작 적용 승인?"
+   },
+   "ticker_mapping": [],
+   "unmapped_assets": [],
+   "resolved_tickers": [
+    "SPY",
+    "QQQ"
+   ]
+  },
+  "signals": {
+   "entry": [
+    {
+     "rule_text": {
+      "value": "종가 > 200일 이동평균 이고 2일 RSI < 5 이면 익일 시가 매수",
+      "source_quote": "S&P 500 지수의 2일 RSI가 5 미만으로 떨어지면",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "RSI(2) + 200일 단순이동평균",
+      "source_quote": "SPY(S&P 500 ETF)가 200일 이동평균선 위에 있을 때 (강세장 조건)",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "lookback_period": {
+      "value": "RSI 2일 / 이동평균 200일",
+      "source_quote": "S&P 500 지수의 2일 RSI가 5 미만으로 떨어지면",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "threshold": {
+      "value": 5,
+      "source_quote": "S&P 500 지수의 2일 RSI가 5 미만으로 떨어지면",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "exit": [
+    {
+     "rule_text": {
+      "value": "종가가 전일 고가를 상회하면 익일 시가 매도",
+      "source_quote": "SPY가 전일 고가를 상회하여 종가하면 다음 날 시가에 매도",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "전일 고가",
+      "source_quote": "SPY가 전일 고가를 상회하여 종가하면 다음 날 시가에 매도",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    },
+    {
+     "rule_text": {
+      "value": "보유 중 종가가 200일 이동평균 아래로 내려가면 익일 시가 매도",
+      "source_quote": "보유 중 SPY가 200일 이동평균선 아래로 떨어지면 다음 날 시가에 매도 (약세장 전환 시 청산)",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     },
+     "indicator": {
+      "value": "200일 단순이동평균",
+      "source_quote": "보유 중 SPY가 200일 이동평균선 아래로 떨어지면 다음 날 시가에 매도 (약세장 전환 시 청산)",
+      "source_locator": "H2:단순 전략 실험",
+      "confidence": "high",
+      "assumption_needed": false,
+      "question_for_user": null
+     }
+    }
+   ],
+   "signal_to_execution_lag": {
+    "value": "익일 시가 (원문 명시)",
+    "source_quote": "다음 날 시가에 SPY를 매수",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "sizing": {
+   "method": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "단순판의 포지션 크기가 원문에 명시되지 않았다. 단일 ETF 롱/플랫 구조이므로 신호 시 100% 보유로 적용해도 되는지? (C8·C9와 동일한 가정)"
+   },
+   "leverage": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "TQQQ(3배) 적용판은 화이트리스트 requires_user_approval(leveraged_or_inverse)이라 제외했다. 승인?"
+   },
+   "cash_handling": {
+    "value": "미보유 구간은 현금",
+    "source_quote": "10-12%의 낮은 시장 노출 시간은 전략이 대부분의 시간 동안 현금으로 대기하고 있음을 의미합니다.",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "rebalance": {
+   "frequency": {
+    "value": "signal-based (일간 평가)",
+    "source_quote": "거래 횟수: 157회 (연간 약 6회)",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "medium",
+    "assumption_needed": false,
+    "question_for_user": null
+   },
+   "timing": {
+    "value": "종가 기준 신호 → 익일 시가 체결",
+    "source_quote": "다음 날 시가에 SPY를 매수",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "risk_controls": {
+   "market_filter": {
+    "value": "200일 이동평균 (진입 조건 겸 청산 조건)",
+    "source_quote": "보유 중 SPY가 200일 이동평균선 아래로 떨어지면 다음 날 시가에 매도 (약세장 전환 시 청산)",
+    "source_locator": "H2:단순 전략 실험",
+    "confidence": "high",
+    "assumption_needed": false,
+    "question_for_user": null
+   }
+  },
+  "costs_assumed_in_post": {
+   "commission": {
+    "value": null,
+    "source_quote": null,
+    "source_locator": null,
+    "confidence": "none",
+    "assumption_needed": true,
+    "question_for_user": "단순판 실험의 비용 가정이 원문에 없다. 엔진 기본값(수수료 0%, 편도 슬리피지 0.05%) 적용 승인?"
+   }
+  }
+ },
+ "reported_performance": {
+  "evidence_type": "text",
+  "period_start": {
+   "value": "1999",
+   "source_quote": "이 전략은 1999년 이후 연간 30%라는 놀라운 수익률을 달성한 것으로 나타났습니다.",
+   "source_locator": "H1:도입부",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  },
+  "cagr": {
+   "value": null,
+   "source_quote": null,
+   "source_locator": null,
+   "confidence": "none",
+   "assumption_needed": true,
+   "question_for_user": "원문의 연 30.3%는 개별주 다중종목 최종판 수치이고, 재현 대상인 단순판에는 CAGR이 아니라 25년 총수익률 67%만 제시된다. 단순판 대조는 총수익률·Sharpe로만 수행해도 되는지?"
+  },
+  "other_metrics": {
+   "value": "단순판 SPY: 25년 총수익률 67%, 거래 157회(연 약 6회). QQQ Sharpe 2.30 / TQQQ 1.92, 승률 72%(TQQQ), 노출 시간 10~12%. 연 30.3%는 개별주 확장 최종판 수치로 재현 대상 아님",
+   "source_quote": "높은 샤프 비율 (QQQ: 2.30, TQQQ: 1.92)",
+   "source_locator": "H2:단순 전략 실험",
+   "confidence": "medium",
+   "assumption_needed": false,
+   "question_for_user": null
+  }
+ },
+ "validation_plan": {
+  "in_sample_end": "2018-12-31",
+  "oos_start": "2019-01-01",
+  "benchmark": "SPY",
+  "data_source": "yfinance",
+  "base_currency": "USD",
+  "in_sample_reproduction_applicable": true,
+  "known_data_gaps": [
+   "발행 2024-10-23 → OOS 구간(2019~) 안에서 작성된 글이므로 L-09(OOS 오염) 적용. 발행 이후 구간은 약 1.9년으로 보조 참고만 가능",
+   "원문 기간은 1999~2024이나 본 검증의 인샘플은 2018-12-31에서 끊긴다 (L-07)",
+   "원문 승률·손익비는 거래당 기준, 엔진 승률은 일간 기준이라 직접 비교 불가 (L-08)"
+  ]
+ },
+ "open_questions": [
+  {
+   "field_path": "strategy.sizing.method",
+   "question": "단순판 포지션 크기 미명시 — 신호 시 100% 보유 가정",
+   "recommended_default": "single asset 100%",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.universe.selection_rule",
+   "question": "QQQ 적용판의 200일선·RSI(2)를 QQQ 자체 가격으로 계산할지(원문은 규칙을 S&P500 기준으로 서술)",
+   "recommended_default": "각 ETF 자체 가격 기준",
+   "blocking": false
+  },
+  {
+   "field_path": "strategy.sizing.leverage",
+   "question": "TQQQ 적용판 제외(레버리지 금지군) 확인",
+   "recommended_default": "제외",
+   "blocking": false
+  }
+ ]
+}

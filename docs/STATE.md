@@ -1,14 +1,18 @@
 # STATE
 
 - 현재 마일스톤: **M6 — 배치 / 최종 리포트 (진행 중)**
-  - **다음 액션(사용자)**: C10·C12 원문 전달 (§미결 W16). 현재 PC에는 M1 아카이브가
-    없으므로(인덱스 0건 — M1은 회사 PC에서 실행) **두 글만 재수집 후 번들 생성**:
-    `python -m src.crawler.run --category strategy --from-shortlist "Larry Connors" "Defense First"`
-    → `python -m src.extractor.make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt`
-    → `data/archive/m6_bundle.txt` 내용 전달 (저장소 커밋 금지)
-  - 구현 완료: `src/validate/run_m6.py`(배치 + 발행후 보조 슬라이스 + 통합 판정표),
-    `src/validate/strategies_m6.py`(C10·C12 삽입 지점), `make_bundle --match/--out`
-  - 남은 작업: C10·C12 스펙 작성 → 빌더 구현 → 로컬 배치 실행 → `reports/M6_final_report.md`
+  - **다음 액션(사용자)**: 로컬 3종 실행 후 출력 전달 (§미결 W17)
+    ① `python -m src.extractor.fill_spec_meta` ② `python -m src.extractor.verify_quotes --spec c10 c12`
+    ③ `python -m src.validate.run_m6 --json reports\m6_results.json`
+  - 스펙 2건 작성 완료: `c10-connors-rsi2-simple`(2024-10-23), `c12-defense-first-taa`(2025-07-28)
+    — 스키마 0오류, 인용 각 23건, **둘 다 L-09(OOS 오염) 해당**
+  - 빌더 4개 추가: c10_spy, c10_qqq, c12(종가 체결), c12_next_open(대조판) → 배치 **21런**
+    - C10: TQQQ판 제외(레버리지 금지군), 개별주 확장판 제외(point-in-time 부재)
+    - C12: PDBC 상장 2014-02 → 인샘플 약 4년(월 신호 <60회). 기준 (2) 기준값 불안정
+  - 구현 완료: `run_m6.py`(배치 + 발행후 보조 슬라이스 + 통합 판정표),
+    `verify_quotes.py`(인용 기계 대조, 로컬 실행), `make_bundle --match/--out`,
+    크롤러 `--urls/--from-shortlist`(다른 PC에서 부족분만 수집)
+  - 남은 작업: 로컬 배치 실행 → `reports/M6_final_report.md` → 최종 게이트 승인
 - M5: **2026-08-31 승인 종결** ("추천대로 진행해줘"). Q13~Q16 전부 권장안 확정.
   보고서: `reports/M5_oos_validation.md`
   - **결과: alive 0 / weak 14 / dead 3 / insufficient_sample 0 (17런)**
@@ -84,7 +88,7 @@
 - [x] M1 실행 계획 제출 → `reports/M0_survey_and_M1_plan.md`
 - [x] M1~M5 게이트 전부 승인 종결 (M1·M2·M3 2026-08-26, M4·M5 2026-08-31)
 - [x] M6 배치 러너 구현 (`run_m6.py`, 발행후 보조 슬라이스 + 통합 판정표)
-- [ ] C10·C12 스펙 작성 (원문 전달 대기 — W16)
+- [x] C10·C12 스펙 작성 (스키마 0오류, 인용 46건 — 로컬 기계 대조 대기)
 - [ ] M6 배치 로컬 실행 → `reports/M6_final_report.md` → 최종 게이트 승인
 
 ## 블로커
@@ -123,15 +127,13 @@
 - 티커 치환: config/ticker_whitelist.yaml 등재 항목만 자동 허용, 그 외 전부 질문
 
 ## 미결
-- **W16: C10·C12 원문 전달 대기** (`make_bundle --match ...`) — 스펙 작성의 전제
+- **W17: 로컬 3종 실행 출력 대기** (fill_spec_meta / verify_quotes / run_m6)
 - C6(HAA)·C9 원문 격차 미해소 (추측 보정 금지 원칙에 따라 한계로 기재, M4 보고서 §4)
 - 미정독 코스닥 계열 14건 `unclassified_out_of_scope` (Q15로 범위 밖 확정, 공시 완료)
 
 ## 다음 세션이 할 일
 1. `CLAUDE.md` → 이 문서 → `docs/OPEN_QUESTIONS.md` 순으로 읽는다.
-2. 사용자가 전달한 **m6 번들**(C10·C12 본문)이 있는지 확인한다.
-3. 있으면: 두 글 정독 → 스펙 JSON 2건 작성(인용 기계 대조·스키마 검증) →
-   `strategies_m6.PENDING_BUILDERS`에 빌더 추가 → 로컬 배치 실행 요청.
-4. 없으면: `make_bundle --match "Larry Connors" "Defense First" --out m6_bundle.txt` 실행 요청.
-5. 배치 출력 수신 후 `reports/M6_final_report.md` 작성 —
+2. 사용자가 전달한 **M6 배치 출력**과 **인용 대조 결과**가 있는지 확인한다.
+3. 인용 불일치가 있으면 해당 스펙 값을 무효 처리하고 먼저 수정한다(§1-2).
+4. 배치 출력 수신 후 `reports/M6_final_report.md` 작성 —
    통합 판정표 + 전략별 1페이지 + 가정값 전수 + 한계(L-01·L-06~L-09) → 최종 게이트 승인 요청.
